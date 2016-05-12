@@ -1,0 +1,72 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "cz.kubacki.gradle.plugins:gradle-nbm-plugin:1.10.0"
+        gradleApi()
+    }
+}
+apply plugin: 'java'
+apply plugin: 'cz.kubacki.nbm'
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'http://bits.netbeans.org/maven2/'
+    }
+}
+
+version = '1.0.0'
+nbm {
+    moduleName = 'kalang.ide.nb'
+}
+
+configurations {
+    provided
+}
+sourceSets {
+    main { compileClasspath += configurations.provided }
+}
+
+def nbApi(String api){
+   dependencies {
+        compile ("org.netbeans.api:${api}:RELEASE81")
+   }
+}
+
+def nbModule(String module){
+    dependencies {
+        implementation ("org.netbeans.modules:${module}:RELEASE81")
+    }
+}
+
+dependencies {
+    nbApi 'org-netbeans-api-java-classpath'
+    nbApi 'org-netbeans-modules-csl-api'
+    nbApi 'org-netbeans-modules-editor-indent'
+    nbApi 'org-netbeans-modules-editor-mimelookup'
+    nbApi 'org-netbeans-modules-lexer'
+    nbApi 'org-netbeans-modules-parsing-api'
+    nbApi 'org-netbeans-spi-editor-hints'
+    nbApi 'org-openide-awt'
+    nbApi 'org-openide-filesystems'
+    nbApi 'org-openide-io'
+    nbApi 'org-openide-loaders'
+    nbApi 'org-openide-nodes'
+    nbApi 'org-openide-util'
+    nbApi 'org-openide-util-lookup'
+    nbApi 'org-openide-windows'
+    nbApi 'org-netbeans-libs-junit4'
+    nbApi 'org-netbeans-modules-editor-bracesmatching'
+    nbModule 'org-netbeans-modules-java-preprocessorbridge'
+
+    compile 'org.slf4j:slf4j-api:1.7.2'
+    compile fileTree('E:\\EclipseWork\\kalang\\build\\install\\kalang\\lib')
+    testCompile 'junit:junit:4.12'
+}
+
+compileJava.options.compilerArgs = ['-sourcepath', "src/main/resources"]
+
+sourceCompatibility = JavaVersion.toVersion("1.6")
+targetCompatibility = JavaVersion.toVersion("1.6")
