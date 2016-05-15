@@ -10,6 +10,7 @@ import kalang.tool.FileSystemCompiler;
 import kalang.tool.MemoryOutputManager;
 import kalang.util.AstUtil;
 import kalang.util.KalangSourceUtil;
+import org.apache.commons.io.FileUtils;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
@@ -48,6 +49,16 @@ public class KalangVirtualSource implements org.netbeans.modules.java.preprocess
                 cpler.addSource(s);
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
+            }
+        }
+        Collection<File> javaFiles = FileUtils.listFiles(root, new String[]{"java"},true);
+        if(javaFiles!=null){
+            for(File j:javaFiles){
+                try {
+                    cpler.addSource(root, j);
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             }
         }
         MemoryOutputManager om = new MemoryOutputManager();
