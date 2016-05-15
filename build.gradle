@@ -17,7 +17,7 @@ repositories {
     }
 }
 
-version = '1.0.2'
+version = '1.0.4'
 nbm {
     moduleName = 'kalang.ide.nb'
 }
@@ -59,9 +59,11 @@ dependencies {
     nbApi 'org-openide-windows'
     nbApi 'org-netbeans-libs-junit4'
     nbApi 'org-netbeans-modules-editor-bracesmatching'
+    nbApi 'org-netbeans-libs-javacapi'
+    providedRuntime 'org.netbeans.external:nb-javac-api:RELEASE81'
     nbModule 'org-netbeans-modules-java-preprocessorbridge'
 
-    compile 'org.slf4j:slf4j-api:1.7.2'
+    //compile 'org.slf4j:slf4j-api:1.7.2'
     compile fileTree('E:\\EclipseWork\\kalang\\build\\install\\kalang\\lib')
     testCompile 'junit:junit:4.12'
 }
@@ -69,4 +71,4 @@ dependencies {
 compileJava.options.compilerArgs = ['-sourcepath', "${projectDir}/src/main/resources"]
 
 sourceCompatibility = JavaVersion.toVersion("1.6")
-targetCompatibility = JavaVersion.toVersion("1.6")
+//targetCompatibility = JavaVersion.toVersion("1.6")

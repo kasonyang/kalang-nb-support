@@ -7,6 +7,7 @@ import kalang.compiler.KalangSource;
 import kalang.ide.Logger;
 import kalang.ide.compiler.NBKalangCompiler;
 import kalang.tool.FileSystemCompiler;
+import kalang.tool.JointFileSystemCompiler;
 import kalang.tool.MemoryOutputManager;
 import kalang.util.AstUtil;
 import kalang.util.KalangSourceUtil;
@@ -20,7 +21,7 @@ import org.openide.util.Exceptions;
  */
 //TODO virtual source does not work
 @org.openide.util.lookup.ServiceProvider(service=org.netbeans.modules.java.preprocessorbridge.spi.VirtualSourceProvider.class)
-public class KalangVirtualSource implements org.netbeans.modules.java.preprocessorbridge.spi.VirtualSourceProvider{
+public class KalangVirtualSourceProvider implements org.netbeans.modules.java.preprocessorbridge.spi.VirtualSourceProvider{
 
     @Override
     public Set<String> getSupportedExtensions() {
@@ -41,7 +42,7 @@ public class KalangVirtualSource implements org.netbeans.modules.java.preprocess
         Logger.log("virtual source root:" + root);
         Map<String,File> class2File = new HashMap();
         FileObject rootFO = FileUtil.toFileObject(root);
-        FileSystemCompiler cpler = NBKalangCompiler.createKalangCompiler(rootFO);
+        JointFileSystemCompiler cpler = NBKalangCompiler.createKalangCompiler(rootFO);
         for(File f:files){
             try {                
                 KalangSource s = KalangSourceUtil.create(root, f);
@@ -54,11 +55,7 @@ public class KalangVirtualSource implements org.netbeans.modules.java.preprocess
         Collection<File> javaFiles = FileUtils.listFiles(root, new String[]{"java"},true);
         if(javaFiles!=null){
             for(File j:javaFiles){
-                try {
-                    cpler.addSource(root, j);
-                } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
+                cpler.addJavaSource(root, j);
             }
         }
         MemoryOutputManager om = new MemoryOutputManager();
