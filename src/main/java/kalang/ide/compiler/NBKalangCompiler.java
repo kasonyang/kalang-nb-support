@@ -12,6 +12,7 @@ import kalang.ide.utils.FileObjectUtil;
 import kalang.tool.JointFileSystemCompiler;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 
 /**
  *
@@ -49,14 +50,14 @@ public class NBKalangCompiler {
         };
         if(sourcePath!=null){
             for(FileObject sp:sourcePath.getRoots()){
-                File spf = FileObjectUtil.toFile(sp);
+                File spf = FileUtil.toFile(sp);
                 compiler.addJavaSourcePath(spf);
                 compiler.addSourcePath(spf);
             }
         }
         if(compilePath!=null){
             for(FileObject cp:compilePath.getRoots()){
-                File f = FileObjectUtil.toFile(cp);
+                File f = FileUtil.toFile(cp);
                 compiler.addClassPath(f);
             }
         }

@@ -7,6 +7,7 @@ import java.util.*;
 import javax.swing.text.Document;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
 
 /**
@@ -30,11 +31,6 @@ public class FileObjectUtil {
         } else {
             return null;
         }
-    }
-
-    public static File toFile(FileObject fo) {
-        //TODO bug
-        return new File(fo.getPath());
     }
 
 }
