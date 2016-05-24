@@ -31,7 +31,7 @@ public class Logger {
     }
     
     public static void warn(Exception ex){
-        ex.printStackTrace(out);
+        ex.printStackTrace(getOut());
     }
 
     public static void warn(String msg) {

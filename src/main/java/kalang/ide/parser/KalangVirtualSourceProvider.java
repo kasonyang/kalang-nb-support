@@ -55,7 +55,11 @@ public class KalangVirtualSourceProvider implements org.netbeans.modules.java.pr
         Collection<File> javaFiles = FileUtils.listFiles(root, new String[]{"java"},true);
         if(javaFiles!=null){
             for(File j:javaFiles){
-                cpler.addJavaSource(root, j);
+                try {
+                    cpler.addJavaSource(root, j);
+                } catch (IOException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             }
         }
         MemoryOutputManager om = new MemoryOutputManager();

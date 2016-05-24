@@ -33,6 +33,7 @@ public class FileObjectUtil {
     }
 
     public static File toFile(FileObject fo) {
+        //TODO bug
         return new File(fo.getPath());
     }
 

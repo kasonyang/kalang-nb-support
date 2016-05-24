@@ -94,9 +94,11 @@ public class KaParser extends Parser {
         CompileErrorHandler errorHandler = new CompileErrorHandler() {
             @Override
             public void handleCompileError(CompileError ce) {
+                Logger.log("handling compile error");
                 if(collectError){
                     OffsetRange offset = ce.getOffset();
                     KalangError ke = new KalangError(ce, fo, clsName, clsName, ce.getDescription(),offset.startOffset,offset.stopOffset);
+                    Logger.log(ce.toString());
                     result.errors.add(ke);
                 }
             }
