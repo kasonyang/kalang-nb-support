@@ -26,7 +26,7 @@ public class Logger {
         return out;
     }
     
-    public static void log(String msg){
+    public static void log(Object msg){
         getOut().println(new Date() +":"+msg);
     }
     

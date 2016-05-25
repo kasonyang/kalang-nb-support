@@ -8,7 +8,6 @@ import kalang.ast.ExprStmt;
 import kalang.compiler.AstBuilder;
 import kalang.compiler.CompilationUnit;
 import kalang.ide.Logger;
-import kalang.ide.utils.FileObjectUtil;
 import kalang.tool.JointFileSystemCompiler;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.openide.filesystems.FileObject;
@@ -51,18 +50,23 @@ public class NBKalangCompiler {
         if(sourcePath!=null){
             for(FileObject sp:sourcePath.getRoots()){
                 File spf = FileUtil.toFile(sp);
-                compiler.addJavaSourcePath(spf);
-                compiler.addSourcePath(spf);
+                if(spf!=null){
+                    compiler.addJavaSourcePath(spf);
+                    compiler.addSourcePath(spf);
+                }
             }
         }
         if(compilePath!=null){
-            for(FileObject cp:compilePath.getRoots()){
-                File f = FileUtil.toFile(cp);
-                compiler.addClassPath(f);
+            String cp = compilePath.toString(ClassPath.PathConversionMode.PRINT);
+            Logger.log("classpath:" + cp);
+            if(cp!=null && !cp.isEmpty()){
+                for(String p:cp.split(";")){
+                    File f = new File(p);
+                    if(f.exists()) compiler.addClassPath(f);
+                }
             }
         }
         return compiler;
-
     }
 
 }
