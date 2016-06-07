@@ -42,6 +42,8 @@ def nbModule(String module){
 }
 
 dependencies {
+    nbApi 'org-openide-dialogs'
+    nbApi 'org-netbeans-modules-editor-lib2'
     nbApi 'org-netbeans-api-java-classpath'
     nbApi 'org-netbeans-modules-csl-api'
     nbApi 'org-netbeans-modules-editor-indent'
@@ -71,4 +73,4 @@ dependencies {
 compileJava.options.compilerArgs = ['-sourcepath', "${projectDir}/src/main/resources"]
 
 sourceCompatibility = JavaVersion.toVersion("1.6")
-//targetCompatibility = JavaVersion.toVersion("1.6")
+targetCompatibility = JavaVersion.toVersion("1.6")

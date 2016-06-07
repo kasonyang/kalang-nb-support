@@ -8,6 +8,7 @@ import kalang.ast.ExprStmt;
 import kalang.compiler.AstBuilder;
 import kalang.compiler.CompilationUnit;
 import kalang.ide.Logger;
+import kalang.ide.utils.ClassPathHelper;
 import kalang.tool.JointFileSystemCompiler;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.openide.filesystems.FileObject;
@@ -18,6 +19,14 @@ import org.openide.filesystems.FileUtil;
  * @author Kason Yang <i@kasonyang.com>
  */
 public class NBKalangCompiler {
+    
+    public static JointFileSystemCompiler compile(FileObject fo) throws IOException{
+        JointFileSystemCompiler cp = createKalangCompiler(fo);
+        String className = ClassPathHelper.getClassName(fo);
+        cp.addSource(className, fo.asText(),fo.getName());
+        cp.compile();
+        return cp;
+    }
 
     public static JointFileSystemCompiler createKalangCompiler(FileObject fo) {
         final ClassPath sourcePath = ClassPath.getClassPath(fo, ClassPath.SOURCE);
