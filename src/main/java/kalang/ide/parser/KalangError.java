@@ -1,14 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package kalang.ide.parser;
-import java.io.*;
-import java.nio.*;
-import java.net.*;
-import java.util.*;
 import kalang.compiler.CompileError;
 import org.netbeans.modules.csl.api.Severity;
 import org.openide.filesystems.FileObject;

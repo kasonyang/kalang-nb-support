@@ -1,5 +1,5 @@
-
 package kalang.ide.parser;
+
 import java.io.*;
 import java.util.*;
 import kalang.compiler.KalangCompiler;
@@ -15,20 +15,19 @@ import org.apache.commons.io.FileUtils;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
+
 /**
  *
  * @author Kason Yang <i@kasonyang.com>
  */
-//TODO virtual source does not work
-@org.openide.util.lookup.ServiceProvider(service=org.netbeans.modules.java.preprocessorbridge.spi.VirtualSourceProvider.class)
-public class KalangVirtualSourceProvider implements org.netbeans.modules.java.preprocessorbridge.spi.VirtualSourceProvider{
+
+@org.openide.util.lookup.ServiceProvider(service = org.netbeans.modules.java.preprocessorbridge.spi.VirtualSourceProvider.class)
+public class KalangVirtualSourceProvider implements org.netbeans.modules.java.preprocessorbridge.spi.VirtualSourceProvider {
 
     @Override
     public Set<String> getSupportedExtensions() {
-        //return Collections.singleton("kl");
-        
-        return new HashSet<String>(
-                Arrays.asList("kl","kalang")
+        return new HashSet<>(
+                Arrays.asList("kl", "kalang")
         );
     }
 
@@ -40,21 +39,21 @@ public class KalangVirtualSourceProvider implements org.netbeans.modules.java.pr
     @Override
     public void translate(Iterable<File> files, File root, Result result) {
         Logger.log("virtual source root:" + root);
-        Map<String,File> class2File = new HashMap();
+        Map<String, File> class2File = new HashMap();
         FileObject rootFO = FileUtil.toFileObject(root);
         JointFileSystemCompiler cpler = NBKalangCompiler.createKalangCompiler(rootFO);
-        for(File f:files){
-            try {                
+        for (File f : files) {
+            try {
                 KalangSource s = KalangSourceUtil.create(root, f);
-                class2File.put(s.getClassName(),f);
+                class2File.put(s.getClassName(), f);
                 cpler.addSource(s);
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
         }
-        Collection<File> javaFiles = FileUtils.listFiles(root, new String[]{"java"},true);
-        if(javaFiles!=null){
-            for(File j:javaFiles){
+        Collection<File> javaFiles = FileUtils.listFiles(root, new String[]{"java"}, true);
+        if (javaFiles != null) {
+            for (File j : javaFiles) {
                 try {
                     cpler.addJavaSource(root, j);
                 } catch (IOException ex) {
@@ -67,33 +66,12 @@ public class KalangVirtualSourceProvider implements org.netbeans.modules.java.pr
         //cpler.compile();
         cpler.generateJavaStub(om);
         String[] classes = om.getClassNames();
-        for(String c:classes){
+        for (String c : classes) {
             byte[] bs = om.getBytes(c);
-            assert bs!=null;
+            assert bs != null;
             String code = new String(bs);
             Logger.log(c + ":" + code);
             result.add(class2File.get(c), AstUtil.getPackageName(c), AstUtil.getClassNameWithoutPackage(c), code);
         }
-//        
-//        Logger.log("v root:" + file);
-//        int i=0;
-//        Logger.log(itrbl.toString());
-//        for(File f:itrbl){
-//            i++;
-//            //FileObject fo = FileUtil.toFileObject(f);
-//            //f = FileUtil.normalizeFile(f);
-//            String pk = "javaapplication1";
-//            FileObject fo = FileUtil.toFileObject(f);
-//            String clsName = fo.getName();
-//            String code = "package " + pk + " ; \n"
-//                    + "public class " + clsName + " {\n" +
-//                        "    public static void main(String[] args) {\n" +
-//                        "        \n" +
-//                        "    }\n" +
-//                        "}";
-//            Logger.log("translated:"+code);
-//            result.add(f, pk,clsName, code);
-            //    Logger.log("translated:" + i);
- 
-        }
+    }
 }

@@ -1,9 +1,6 @@
 
 package kalang.ide.parser;
 import java.io.*;
-import java.nio.*;
-import java.net.*;
-import java.util.*;
 import kalang.ide.Logger;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.indexing.Context;
@@ -11,7 +8,6 @@ import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexer;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexDocument;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexingSupport;
-import org.openide.util.Exceptions;
 /**
  *
  * @author Kason Yang <i@kasonyang.com>
