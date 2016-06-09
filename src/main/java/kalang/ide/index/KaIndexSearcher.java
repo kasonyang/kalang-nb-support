@@ -41,8 +41,8 @@ public class KaIndexSearcher implements IndexSearcher{
                 queryText = queryText.toLowerCase();
             }            
             QuerySupport.Query q = qf.or(
-                    qf.field("simple_name" + fieldSuffix, queryText, QuerySupport.Kind.CAMEL_CASE)
-                    ,qf.field("full_name" + fieldSuffix, queryText, QuerySupport.Kind.CAMEL_CASE));
+                    qf.field("simple_name" + fieldSuffix, queryText, QuerySupport.Kind.PREFIX)
+                    ,qf.field("full_name" + fieldSuffix, queryText, QuerySupport.Kind.PREFIX));
             Logger.log(q);
             Collection<? extends IndexResult> rs = q.execute((String[]) null);
             for(IndexResult r:rs){
