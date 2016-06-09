@@ -42,6 +42,7 @@ def nbModule(String module){
 }
 
 dependencies {
+    nbApi 'org-netbeans-modules-parsing-indexing'
     nbApi 'org-openide-dialogs'
     nbApi 'org-netbeans-modules-editor-lib2'
     nbApi 'org-netbeans-api-java-classpath'
@@ -63,6 +64,7 @@ dependencies {
     nbApi 'org-netbeans-modules-editor-bracesmatching'
     nbApi 'org-netbeans-libs-javacapi'
     providedRuntime 'org.netbeans.external:nb-javac-api:RELEASE81'
+    //testCompile 'org.netbeans.cluster:harness:RELEASE80'
     nbModule 'org-netbeans-modules-java-preprocessorbridge'
 
     //compile 'org.slf4j:slf4j-api:1.7.2'

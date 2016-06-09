@@ -26,7 +26,7 @@ public class KalangVirtualSourceProvider implements org.netbeans.modules.java.pr
 
     @Override
     public Set<String> getSupportedExtensions() {
-        return new HashSet<>(
+        return new HashSet<String>(
                 Arrays.asList("kl", "kalang")
         );
     }
