@@ -9,6 +9,9 @@ import kalang.ast.MethodNode;
 import kalang.ast.VarObject;
 import java.util.*;
 import javax.swing.ImageIcon;
+import kalang.core.MethodDescriptor;
+import kalang.core.ParameterDescriptor;
+import kalang.core.Type;
 import kalang.ide.Logger;
 import kalang.ide.utils.ModifierUtil;
 import org.netbeans.modules.csl.api.CompletionProposal;
@@ -94,16 +97,16 @@ public abstract class KalangCompletionItem implements CompletionProposal {
     
     public static class MethodCompleteItem extends KalangCompletionItem{
 
-        private final MethodNode method;
+        private final MethodDescriptor method;
 
-        public MethodCompleteItem(MethodNode method,CompletionRequest request) {
+        public MethodCompleteItem(MethodDescriptor method,CompletionRequest request) {
             super(request);
             this.method =  method;
         }
 
         @Override
         public String getName() {
-            return method.name;
+            return method.getName();
         }
 
         @Override
@@ -111,11 +114,12 @@ public abstract class KalangCompletionItem implements CompletionProposal {
             hf.appendText(getName());
             hf.parameters(true);
             hf.appendText("(");
-            if(method.parameters!=null){
-                for(int i=0;i<method.parameters.size();i++){
+            ParameterDescriptor[] params = method.getParameterDescriptors();
+            if(params!=null){
+                for(int i=0;i<params.length;i++){
                     if(i>0) hf.appendText(",");
-                    VarObject p = method.parameters.get(i);
-                    hf.appendText(p.type + " " + p.name);
+                    ParameterDescriptor p = params[i];
+                    hf.appendText(p.getType() + " " + p.getName());
                 }
             }
             hf.appendText(")");
@@ -127,19 +131,19 @@ public abstract class KalangCompletionItem implements CompletionProposal {
         @Override
         public String getInsertPrefix() {
             StringBuilder sb = new StringBuilder();
-            sb.append(method.name);
+            sb.append(method.getName());
             sb.append("(");
             return sb.toString();
         }
 
         @Override
         public String getRhsHtml(HtmlFormatter hf) {
-            return method.type==null?"":method.type.getName();
+            return Objects.toString(method.getReturnType(), "");
         }
 
         @Override
         public Set<Modifier> getModifiers() {
-            return ModifierUtil.getModifier(method.modifier);
+            return ModifierUtil.getModifier(method.getModifier());
         }
         
     }
