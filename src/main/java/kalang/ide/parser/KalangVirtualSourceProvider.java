@@ -11,6 +11,7 @@ import kalang.tool.JointFileSystemCompiler;
 import kalang.tool.MemoryOutputManager;
 import kalang.util.AstUtil;
 import kalang.util.KalangSourceUtil;
+import kalang.util.NameUtil;
 import org.apache.commons.io.FileUtils;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -71,7 +72,7 @@ public class KalangVirtualSourceProvider implements org.netbeans.modules.java.pr
             assert bs != null;
             String code = new String(bs);
             Logger.log(c + ":" + code);
-            result.add(class2File.get(c), AstUtil.getPackageName(c), AstUtil.getClassNameWithoutPackage(c), code);
+            result.add(class2File.get(c), NameUtil.getPackageName(c), NameUtil.getClassNameWithoutPackage(c), code);
         }
     }
 }

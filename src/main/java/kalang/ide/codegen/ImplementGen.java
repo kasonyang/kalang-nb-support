@@ -5,6 +5,8 @@ import java.util.List;
 import javax.swing.text.JTextComponent;
 import kalang.ast.ClassNode;
 import kalang.ast.MethodNode;
+import kalang.core.ClassType;
+import kalang.core.MethodDescriptor;
 import kalang.util.AstUtil;
 
 /**
@@ -18,9 +20,9 @@ public class ImplementGen extends MethodGenerator{
     }
 
     @Override
-    protected List<MethodNode> getMethodNodes(ClassNode ast) {
-        List<MethodNode> unimplementsList = new LinkedList();
-        for(ClassNode itf:ast.interfaces){
+    protected List<MethodDescriptor> getMethodNodes(ClassNode ast) {
+        List<MethodDescriptor> unimplementsList = new LinkedList();
+        for(ClassType itf:ast.interfaces){
             //TODO get all unimplemented methods
             unimplementsList.addAll(AstUtil.getUnimplementedMethod(ast, itf));
         }

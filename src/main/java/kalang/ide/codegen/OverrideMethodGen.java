@@ -5,6 +5,8 @@ import java.util.List;
 import javax.swing.text.JTextComponent;
 import kalang.ast.ClassNode;
 import kalang.ast.MethodNode;
+import kalang.core.MethodDescriptor;
+import kalang.core.Types;
 import kalang.util.AstUtil;
 
 /**
@@ -18,8 +20,8 @@ public class OverrideMethodGen extends MethodGenerator{
     }
 
     @Override
-    protected List<MethodNode> getMethodNodes(ClassNode clazz) {
-        MethodNode[] mds = AstUtil.listAccessibleMethods(clazz, clazz, true);
+    protected List<MethodDescriptor> getMethodNodes(ClassNode clazz) {
+        MethodDescriptor[] mds = Types.getClassType(clazz).getMethodDescriptors(clazz, true);
         return Arrays.asList(mds);
     }
 

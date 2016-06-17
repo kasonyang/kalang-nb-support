@@ -9,6 +9,7 @@ import kalang.ast.MethodNode;
 import kalang.ast.VarObject;
 import java.util.*;
 import kalang.core.ClassType;
+import kalang.core.FieldDescriptor;
 import kalang.core.MethodDescriptor;
 import kalang.core.Type;
 import kalang.util.AstUtil;
@@ -23,12 +24,13 @@ public class TypeCompletion {
         if(ast==null) return list;
         if(!(ast instanceof ClassType)) return list;
         ClassType clazz = (ClassType) ast;
-        VarObject[] fs = ast.getFields();
+        //TODO require caller from params
+        FieldDescriptor[] fs = clazz.getFieldDescriptors(clazz.getClassNode());
         String prefix = request.prefix==null ? "":request.prefix;
         if(fs!=null){
-            for(VarObject f:fs){
-                if(f.name==null || !f.name.startsWith(prefix)) continue;
-                if(inStatic != AstUtil.isStatic(f.modifier)) continue;
+            for(FieldDescriptor f:fs){
+                if(f.getName()==null || !f.getName().startsWith(prefix)) continue;
+                if(inStatic != AstUtil.isStatic(f.getModifier())) continue;
                 KalangCompletionItem.FieldCompleteItem fi = new KalangCompletionItem.FieldCompleteItem(request, f);
                 list.add(fi);
             }

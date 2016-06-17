@@ -43,17 +43,17 @@ public class KalangDeclFinder implements DeclarationFinder{
             VarObject var = ((VarExpr)astNode).getVar();
             return getDeclaration(result, type,var);
         }else if(astNode instanceof InvocationExpr){
-            MethodNode method = ((InvocationExpr)astNode).getMethod();
+            MethodNode method = ((InvocationExpr)astNode).getMethod().getMethodNode();
             return getDeclaration(result, method);
         }else if(astNode instanceof FieldExpr){
             FieldExpr fieldExpr = (FieldExpr) astNode;
-            FieldNode field = fieldExpr.getField();
+            FieldNode field = fieldExpr.getField().getFieldNode();
             return getDeclaration(result,field.classNode.name,field);
         }else if(astNode instanceof ClassReference){
             ClassNode clazz = ((ClassReference) astNode).getReferencedClassNode();
             return getDeclaration(result, clazz.name,clazz);
         }else if(astNode instanceof NewObjectExpr){
-            MethodNode md = ((NewObjectExpr)astNode).getConstructor().getMethod();
+            MethodNode md = ((NewObjectExpr)astNode).getConstructor().getMethod().getMethodNode();
             return getDeclaration(result, md);
         }
         return DeclarationLocation.NONE;

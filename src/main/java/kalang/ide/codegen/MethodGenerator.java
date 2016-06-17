@@ -19,6 +19,8 @@ import kalang.ast.MethodNode;
 import kalang.ast.ParameterNode;
 import kalang.compiler.CompilationUnit;
 import kalang.core.ClassType;
+import kalang.core.MethodDescriptor;
+import kalang.core.ParameterDescriptor;
 import kalang.core.Type;
 import kalang.ide.Logger;
 import kalang.ide.compiler.NBKalangCompiler;
@@ -27,6 +29,7 @@ import kalang.ide.utils.DocumentUtil;
 import kalang.ide.utils.FileObjectUtil;
 import kalang.tool.JointFileSystemCompiler;
 import kalang.util.AstUtil;
+import kalang.util.NameUtil;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.netbeans.spi.editor.codegen.CodeGenerator;
 import org.openide.DialogDescriptor;
@@ -76,9 +79,9 @@ public abstract class MethodGenerator implements CodeGenerator{
             Logger.log("ast is null:" + className);
             return;
         }
-        List<MethodNode> methods = getMethodNodes(ast);
+        List<MethodDescriptor> methods = getMethodNodes(ast);
         DefaultMutableTreeNode root = new DefaultMutableTreeNode();
-        for(MethodNode m:methods){
+        for(MethodDescriptor m:methods){
             root.add(new DefaultMutableTreeNode(new MethodItem(m)));
         }
         JTree jTree = new JTree(root);
@@ -88,7 +91,7 @@ public abstract class MethodGenerator implements CodeGenerator{
         dialog.dispose();
         if(desc.getValue()==DialogDescriptor.OK_OPTION){
             TreePath[] selectedPaths = jTree.getSelectionPaths();
-            List<MethodNode> selectedMethods = new LinkedList();
+            List<MethodDescriptor> selectedMethods = new LinkedList();
             for(TreePath p:selectedPaths){
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) p.getLastPathComponent();
                 Object m = node.getUserObject();
@@ -101,19 +104,19 @@ public abstract class MethodGenerator implements CodeGenerator{
         }
     }
     
-    protected void insertMethods(List<MethodNode> mds,String indent,ParserRuleContext unit){
+    protected void insertMethods(List<MethodDescriptor> mds,String indent,ParserRuleContext unit){
         String code = "";
         Set<Type> referenceClassName = new HashSet();
-        for(MethodNode m:mds){
+        for(MethodDescriptor m:mds){
             List<String> params = new LinkedList();
-            for(ParameterNode p:m.parameters){
-                Type pt = p.type;
+            for(ParameterDescriptor p:m.getParameterDescriptors()){
+                Type pt = p.getType();
                 referenceClassName.add(pt);
-                params.add(String.format("%s %s",AstUtil.getClassNameWithoutPackage(pt.getName()),p.name));
+                params.add(String.format("%s %s",NameUtil.getClassNameWithoutPackage(pt.getName()),p.getName()));
             }
-            Type type = m.type;
+            Type type = m.getReturnType();
             referenceClassName.add(type);
-            String mdDecl = String.format("%s %s %s(%s)", Modifier.toString(m.modifier & ~Modifier.ABSTRACT),AstUtil.getClassNameWithoutPackage(type.getName()),m.name,String.join(",", params));
+            String mdDecl = String.format("%s %s %s(%s)", Modifier.toString(m.getModifier() & ~Modifier.ABSTRACT),NameUtil.getClassNameWithoutPackage(type.getName()),m.getName(),String.join(",", params));
             code += "@Override\n" + indent + mdDecl + "{\n" + indent + indent + "throw new UnsupportedOperationException();" + "\n" + indent + "}\n" + indent;
         }
         textComponent.replaceSelection(code);
@@ -127,7 +130,7 @@ public abstract class MethodGenerator implements CodeGenerator{
             while(fullClassName.endsWith("[]")){
                 fullClassName = fullClassName.substring(0,fullClassName.length()-2);
             }
-            String ipSimpleName = AstUtil.getClassNameWithoutPackage(fullClassName);
+            String ipSimpleName = NameUtil.getClassNameWithoutPackage(fullClassName);
             //TODO remove classes in default packages
             //TODO what about same simple class name with different package?
             if(!importedSimpleName.contains(ipSimpleName)){
@@ -140,6 +143,6 @@ public abstract class MethodGenerator implements CodeGenerator{
         textComponent.replaceSelection("\n" + String.join("\n", importCodeList) + "\n");
     }
     
-    protected abstract List<MethodNode> getMethodNodes(ClassNode clazz);
+    protected abstract List<MethodDescriptor> getMethodNodes(ClassNode clazz);
 
 }

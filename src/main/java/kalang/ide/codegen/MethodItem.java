@@ -1,7 +1,9 @@
 package kalang.ide.codegen;
 
 import kalang.ast.MethodNode;
+import kalang.core.MethodDescriptor;
 import kalang.util.AstUtil;
+import kalang.util.MethodUtil;
 
 /**
  *
@@ -9,18 +11,18 @@ import kalang.util.AstUtil;
  */
 public class MethodItem {
     
-    protected MethodNode method;
+    protected MethodDescriptor method;
 
-    public MethodItem(MethodNode method) {
+    public MethodItem(MethodDescriptor method) {
         this.method = method;
     }
 
     @Override
     public String toString() {
-        return AstUtil.getMethodDescription(method);
+        return method.toString();
     }
 
-    public MethodNode getMethod() {
+    public MethodDescriptor getMethod() {
         return method;
     }
     

@@ -6,6 +6,7 @@ import kalang.compiler.CompilationUnit;
 import kalang.ide.Logger;
 import kalang.ide.parser.KaParser;
 import kalang.util.AstUtil;
+import kalang.util.NameUtil;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexer;
@@ -35,7 +36,7 @@ public class KalangIndexer extends EmbeddingIndexer{
         Logger.log("indexing " + rs.getSnapshot().getSource().getFileObject());
         CompilationUnit cu = rs.getCompilationUnit();
         String clsName = rs.getClassName();
-        String simpleName = AstUtil.getClassNameWithoutPackage(clsName);
+        String simpleName = NameUtil.getClassNameWithoutPackage(clsName);
         //String pkgName = AstUtil.getPackageName(clsName);
         id.addPair("simple_name",simpleName , true, true);
         id.addPair("simple_name_ci", simpleName.toLowerCase(), true, true);

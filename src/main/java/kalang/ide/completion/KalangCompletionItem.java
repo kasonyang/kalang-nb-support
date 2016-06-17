@@ -9,6 +9,7 @@ import kalang.ast.MethodNode;
 import kalang.ast.VarObject;
 import java.util.*;
 import javax.swing.ImageIcon;
+import kalang.core.FieldDescriptor;
 import kalang.core.MethodDescriptor;
 import kalang.core.ParameterDescriptor;
 import kalang.core.Type;
@@ -150,26 +151,26 @@ public abstract class KalangCompletionItem implements CompletionProposal {
     
     static class FieldCompleteItem extends KalangCompletionItem{
 
-        private final VarObject field;
+        private final FieldDescriptor field;
 
-        public FieldCompleteItem(CompletionRequest request,VarObject field) {
+        public FieldCompleteItem(CompletionRequest request,FieldDescriptor field) {
             super(request);
             this.field = field;
         }
 
         @Override
         public String getName() {
-            return this.field.name;
+            return this.field.getName();
         }
 
         @Override
         public String getRhsHtml(HtmlFormatter hf) {
-            return field.type!=null?field.type.getName():"";
+            return field.getType()!=null?field.getType().getName():"";
         }
 
         @Override
         public Set<Modifier> getModifiers() {
-            return ModifierUtil.getModifier(field.modifier);
+            return ModifierUtil.getModifier(field.getModifier());
         }
 
         @Override
