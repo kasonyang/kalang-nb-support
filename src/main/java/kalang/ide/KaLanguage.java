@@ -9,10 +9,12 @@ import kalang.ide.index.KaIndexSearcher;
 import kalang.ide.parser.KaParser;
 import kalang.ide.parser.KalangDeclFinder;
 import kalang.ide.index.KalangIndexer;
+import kalang.ide.parser.KalangSemanticAnalyzer;
 import org.netbeans.api.lexer.Language;
 import org.netbeans.modules.csl.api.CodeCompletionHandler;
 import org.netbeans.modules.csl.api.DeclarationFinder;
 import org.netbeans.modules.csl.api.IndexSearcher;
+import org.netbeans.modules.csl.api.SemanticAnalyzer;
 import org.netbeans.modules.csl.spi.DefaultLanguageConfig;
 import org.netbeans.modules.csl.spi.LanguageRegistration;
 import org.netbeans.modules.parsing.spi.*;
@@ -51,10 +53,10 @@ public class KaLanguage extends DefaultLanguageConfig {
     
     
 
-//    @Override
-//    public SemanticAnalyzer getSemanticAnalyzer() {
-//        return new KalangSemanticAnalyzer();
-//    }
+    @Override
+    public SemanticAnalyzer getSemanticAnalyzer() {
+        return new KalangSemanticAnalyzer();
+    }
 
 //    @Override
 //    public KeystrokeHandler getKeystrokeHandler() {

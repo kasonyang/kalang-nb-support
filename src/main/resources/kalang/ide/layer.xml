@@ -7,7 +7,14 @@
                 <file name="JavaIndexer.shadow">
                     <attr name="originalFile" stringvalue="Editors/text/x-java/JavaIndexer.instance"/>
                 </file>
-
+                 <folder name="FontsColors">
+                    <folder name="NetBeans">
+                        <folder name="Defaults">
+                            <file name="coloring.xml" url="fontsColors.xml">
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
             </folder>
         </folder>
     </folder>
