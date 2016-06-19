@@ -18,10 +18,15 @@ import kalang.ast.ClassNode;
 import kalang.ast.MethodNode;
 import kalang.ast.ParameterNode;
 import kalang.compiler.CompilationUnit;
+import kalang.core.ArrayType;
 import kalang.core.ClassType;
+import kalang.core.GenericType;
 import kalang.core.MethodDescriptor;
 import kalang.core.ParameterDescriptor;
+import kalang.core.ParameterizedType;
+import kalang.core.PrimitiveType;
 import kalang.core.Type;
+import kalang.core.WildcardType;
 import kalang.ide.Logger;
 import kalang.ide.compiler.NBKalangCompiler;
 import kalang.ide.utils.ClassPathHelper;
@@ -106,35 +111,27 @@ public abstract class MethodGenerator implements CodeGenerator{
     
     protected void insertMethods(List<MethodDescriptor> mds,String indent,ParserRuleContext unit){
         String code = "";
-        Set<Type> referenceClassName = new HashSet();
+        Set<String> referenceClasses = new HashSet();
         for(MethodDescriptor m:mds){
             List<String> params = new LinkedList();
             for(ParameterDescriptor p:m.getParameterDescriptors()){
-                Type pt = p.getType();
-                referenceClassName.add(pt);
-                params.add(String.format("%s %s",NameUtil.getClassNameWithoutPackage(pt.getName()),p.getName()));
+                String pt =simplifyTypeName(p.getType(),referenceClasses);
+                params.add(String.format("%s %s",pt,p.getName()));
             }
-            Type type = m.getReturnType();
-            referenceClassName.add(type);
-            String mdDecl = String.format("%s %s %s(%s)", Modifier.toString(m.getModifier() & ~Modifier.ABSTRACT),NameUtil.getClassNameWithoutPackage(type.getName()),m.getName(),String.join(",", params));
-            code += "@Override\n" + indent + mdDecl + "{\n" + indent + indent + "throw new UnsupportedOperationException();" + "\n" + indent + "}\n" + indent;
+            String returnType = simplifyTypeName(m.getReturnType(), referenceClasses);
+            String mdDecl = String.format("%s %s %s(%s)", Modifier.toString(m.getModifier() & ~Modifier.ABSTRACT),returnType,m.getName(),String.join(",", params));
+            code += "override " + indent + mdDecl + "{\n" + indent + indent + "throw new UnsupportedOperationException();" + "\n" + indent + "}\n" + indent;
         }
         textComponent.replaceSelection(code);
         ImportVisitor importVisitor = new ImportVisitor();
         importVisitor.visit(unit);
         List<String> importedSimpleName = importVisitor.getImported();
         List<String> importCodeList = new LinkedList();
-        for(Type ip:referenceClassName){
-            if(!(ip instanceof ClassType)) continue;
-            String fullClassName = ip.getName();
-            while(fullClassName.endsWith("[]")){
-                fullClassName = fullClassName.substring(0,fullClassName.length()-2);
-            }
-            String ipSimpleName = NameUtil.getClassNameWithoutPackage(fullClassName);
+        for(String ip:referenceClasses){
             //TODO remove classes in default packages
             //TODO what about same simple class name with different package?
-            if(!importedSimpleName.contains(ipSimpleName)){
-                importCodeList.add("import " + fullClassName + ";");
+            if(!importedSimpleName.contains(ip)){
+                importCodeList.add("import " + ip + ";");
             }
         }
         int importInsertPos = importVisitor.getImportEnd() + 1;
@@ -144,5 +141,47 @@ public abstract class MethodGenerator implements CodeGenerator{
     }
     
     protected abstract List<MethodDescriptor> getMethodNodes(ClassNode clazz);
+    
+    protected String[] simplifyTypeName(Type[] type,Set<String> importList){
+        String[] list = new String[type.length];
+        for(int i=0;i<type.length;i++){
+            list[i] = simplifyTypeName(type[i], importList);
+        }
+        return list;
+    }
+    
+    protected String simplifyTypeName(Type type,Set<String> importList){
+        if(type instanceof PrimitiveType){
+            return type.getName();
+        }else if(type instanceof ArrayType){
+            String st = simplifyTypeName(((ArrayType)type).getComponentType(), importList);
+            return st + "[]";
+        }else if(type instanceof GenericType){
+            return type.getName();
+        }else if(type instanceof ParameterizedType){
+            ParameterizedType pt = (ParameterizedType) type;
+            return String.format("%s<%s>", simplifyTypeName(pt.getRawType(), importList) ,String.join(",",Arrays.asList(simplifyTypeName(pt.getParameterTypes(), importList))));
+                    
+        }else if(type instanceof ClassType){
+            String name = type.getName();
+            //TODO remove default class
+            importList.add(name);
+            return NameUtil.getClassNameWithoutPackage(name);
+        }else if(type instanceof WildcardType){
+            WildcardType wt = (WildcardType) type;
+            Type[] lbs = wt.getLowerBounds();
+            Type[] ubs = wt.getUpperBounds();
+            if(lbs!=null && lbs.length>0){
+                return "? super " + simplifyTypeName(lbs[0], importList);
+            }else if(ubs!=null && ubs.length>0){
+                return "? extends " + simplifyTypeName(ubs[0], importList);
+            }else{
+                return "?";
+            }
+        }else{
+            Logger.warn(new IllegalArgumentException("unknown type:" + type));
+            return type.getName();
+        }
+    }
 
 }
