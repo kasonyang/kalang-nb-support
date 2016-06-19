@@ -120,7 +120,7 @@ public abstract class MethodGenerator implements CodeGenerator{
             }
             String returnType = simplifyTypeName(m.getReturnType(), referenceClasses);
             String mdDecl = String.format("%s %s %s(%s)", Modifier.toString(m.getModifier() & ~Modifier.ABSTRACT),returnType,m.getName(),String.join(",", params));
-            code += "override " + indent + mdDecl + "{\n" + indent + indent + "throw new UnsupportedOperationException();" + "\n" + indent + "}\n" + indent;
+            code += "override " + mdDecl + "{\n" + indent + indent + "throw new UnsupportedOperationException();" + "\n" + indent + "}\n" + indent;
         }
         textComponent.replaceSelection(code);
         ImportVisitor importVisitor = new ImportVisitor();
