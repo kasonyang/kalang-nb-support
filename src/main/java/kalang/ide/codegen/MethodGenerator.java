@@ -1,29 +1,19 @@
 
 package kalang.ide.codegen;
 import java.awt.Dialog;
-import java.io.*;
 import java.lang.reflect.Modifier;
-import java.nio.*;
-import java.net.*;
 import java.util.*;
 import javax.swing.JTree;
-import javax.swing.text.Caret;
 import javax.swing.text.JTextComponent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
-import kalang.antlr.KalangBaseVisitor;
-import kalang.antlr.KalangParser;
-import kalang.antlr.KalangVisitor;
 import kalang.ast.ClassNode;
-import kalang.ast.MethodNode;
-import kalang.ast.ParameterNode;
 import kalang.compiler.CompilationUnit;
 import kalang.core.ArrayType;
 import kalang.core.ClassType;
 import kalang.core.GenericType;
 import kalang.core.MethodDescriptor;
 import kalang.core.ParameterDescriptor;
-import kalang.core.ParameterizedType;
 import kalang.core.PrimitiveType;
 import kalang.core.Type;
 import kalang.core.WildcardType;
@@ -33,15 +23,12 @@ import kalang.ide.utils.ClassPathHelper;
 import kalang.ide.utils.DocumentUtil;
 import kalang.ide.utils.FileObjectUtil;
 import kalang.tool.JointFileSystemCompiler;
-import kalang.util.AstUtil;
 import kalang.util.NameUtil;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.netbeans.spi.editor.codegen.CodeGenerator;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.filesystems.FileObject;
-import org.openide.util.Exceptions;
-import org.openide.util.Lookup;
 /**
  *
  * @author Kason Yang <i@kasonyang.com>
@@ -158,15 +145,19 @@ public abstract class MethodGenerator implements CodeGenerator{
             return st + "[]";
         }else if(type instanceof GenericType){
             return type.getName();
-        }else if(type instanceof ParameterizedType){
-            ParameterizedType pt = (ParameterizedType) type;
-            return String.format("%s<%s>", simplifyTypeName(pt.getRawType(), importList) ,String.join(",",Arrays.asList(simplifyTypeName(pt.getParameterTypes(), importList))));
-                    
         }else if(type instanceof ClassType){
-            String name = type.getName();
+            ClassType pt = (ClassType) type;
+            Type[] pts = pt.getParameterTypes();
+            ClassNode rawType = pt.getRawType();
+            String name = rawType.name;
+            String simpleRootType = NameUtil.getClassNameWithoutPackage(name);
             //TODO remove default class
             importList.add(name);
-            return NameUtil.getClassNameWithoutPackage(name);
+            if(pts.length>0){
+                return String.format("%s<%s>",simpleRootType,String.join(",",Arrays.asList(simplifyTypeName(pt.getParameterTypes(), importList))));
+            }else{
+                return simpleRootType;
+            }
         }else if(type instanceof WildcardType){
             WildcardType wt = (WildcardType) type;
             Type[] lbs = wt.getLowerBounds();
