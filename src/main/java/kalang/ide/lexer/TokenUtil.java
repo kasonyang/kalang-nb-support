@@ -24,7 +24,8 @@ public class TokenUtil {
         String keywords = "char,byte,int,long,double,float,void,null"
                 + ",public,protected,private"
                 + ",static,class,interface,extends,implements,var,as"
-                + ",return,while,for,do";
+                + ",return,while,for,do"
+                + ",new,override,import,throw,throws";
         String operators = "+,-,*,/,%,=,==,!=,+=,-=,*=,/=,%=,++,--";
         HashMap<String,String> cmap = new HashMap();
         for(String k:keywords.split(",")){
