@@ -147,14 +147,14 @@ public abstract class MethodGenerator implements CodeGenerator{
             return type.getName();
         }else if(type instanceof ClassType){
             ClassType pt = (ClassType) type;
-            Type[] pts = pt.getParameterTypes();
-            ClassNode rawType = pt.getRawType();
+            Type[] pts = pt.getTypeArguments();
+            ClassNode rawType = pt.getClassNode();
             String name = rawType.name;
             String simpleRootType = NameUtil.getClassNameWithoutPackage(name);
             //TODO remove default class
             importList.add(name);
             if(pts.length>0){
-                return String.format("%s<%s>",simpleRootType,String.join(",",Arrays.asList(simplifyTypeName(pt.getParameterTypes(), importList))));
+                return String.format("%s<%s>",simpleRootType,String.join(",",Arrays.asList(simplifyTypeName(pts, importList))));
             }else{
                 return simpleRootType;
             }
