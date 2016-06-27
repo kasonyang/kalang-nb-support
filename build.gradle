@@ -15,6 +15,9 @@ repositories {
     maven {
         url 'http://bits.netbeans.org/maven2/'
     }
+    maven {
+        url  "http://dl.bintray.com/kasonyang/maven" 
+    }
 }
 
 version = '1.0.12'
@@ -68,7 +71,7 @@ dependencies {
     nbModule 'org-netbeans-modules-java-preprocessorbridge'
 
     //compile 'org.slf4j:slf4j-api:1.7.2'
-    compile fileTree('E:\\EclipseWork\\kalang\\build\\install\\kalang\\lib')
+    compile 'com.kasonyang.kalang:kalang-compiler:0.0.6'
     testCompile 'junit:junit:4.12'
 }
 
