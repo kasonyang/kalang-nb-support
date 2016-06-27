@@ -1,5 +1,5 @@
-# Kalang-support
-A netbeans-plugin support for kalang
+# Kalang-nb-support
+A netbeans plugin support for [kalang](https://github.com/kasonyang/kalang)
 
 # Features
 
@@ -7,3 +7,21 @@ A netbeans-plugin support for kalang
 * auto-complete support
 * code generation support
 * declaration navigation support
+
+# How to build
+
+build:
+
+```
+gradle build
+```
+
+run:
+
+```
+gradle run
+```
+
+# License
+
+MIT
