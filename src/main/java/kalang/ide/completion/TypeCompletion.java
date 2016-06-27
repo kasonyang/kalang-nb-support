@@ -25,7 +25,7 @@ public class TypeCompletion {
             for(FieldDescriptor f:fs){
                 if(f.getName()==null || !f.getName().startsWith(prefix)) continue;
                 if(inStatic != AstUtil.isStatic(f.getModifier())) continue;
-                KalangCompletionItem.FieldCompleteItem fi = new KalangCompletionItem.FieldCompleteItem(request, f);
+                FieldCompleteItem fi = new FieldCompleteItem(request, f);
                 list.add(fi);
             }
         }
@@ -37,7 +37,7 @@ public class TypeCompletion {
                 if(name==null || !name.startsWith(prefix)) continue;
                 if(name.startsWith("<")) continue;
                 if(inStatic != AstUtil.isStatic(m.getModifier())) continue;
-                KalangCompletionItem ci = new KalangCompletionItem.MethodCompleteItem(m,request);
+                KalangCompletionItem ci = new MethodCompleteItem(m,request);
                   list.add(ci);
             }
         }
