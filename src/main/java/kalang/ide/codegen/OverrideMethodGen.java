@@ -21,7 +21,7 @@ public class OverrideMethodGen extends MethodGenerator{
 
     @Override
     protected List<MethodDescriptor> getMethodNodes(ClassNode clazz) {
-        MethodDescriptor[] mds = Types.getClassType(clazz).getMethodDescriptors(clazz, true);
+        MethodDescriptor[] mds = Types.getClassType(clazz).getMethodDescriptors(clazz, true,true);
         return Arrays.asList(mds);
     }
 

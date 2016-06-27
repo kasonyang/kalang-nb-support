@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package kalang.ide.completion;
 import kalang.ast.MethodNode;
 import kalang.ast.VarObject;
@@ -20,7 +14,7 @@ import org.netbeans.modules.csl.api.CompletionProposal;
  */
 public class TypeCompletion {
     public static List<CompletionProposal> complete(CompletionRequest request,Type ast,boolean inStatic){
-        List<CompletionProposal> list = new LinkedList<CompletionProposal>();
+        List<CompletionProposal> list = new LinkedList();
         if(ast==null) return list;
         if(!(ast instanceof ClassType)) return list;
         ClassType clazz = (ClassType) ast;
@@ -36,7 +30,7 @@ public class TypeCompletion {
             }
         }
         //TODO require caller type
-        MethodDescriptor[] ms = clazz.getMethodDescriptors(clazz.getClassNode(), true);
+        MethodDescriptor[] ms = clazz.getMethodDescriptors(clazz.getClassNode(), true,true);
         if(ms!=null){
             for(MethodDescriptor m:ms){
                 String name = m.getName();
