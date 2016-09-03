@@ -10,11 +10,13 @@ A netbeans plugin support for [kalang](https://github.com/kasonyang/kalang)
 
 # Snapshot
 
-Autocomplete:
-![autocomplete](raw/master/snapshot/autocomplete.png)
+Auto-complete:
+
+![autocomplete](https://github.com/kasonyang/kalang-nb-support/blob/master/snapshot/autocomplete.png?raw=true)
 
 Code generators:
-![code generators](raw/master/snapshot/codegen.png)
+
+![code generators](https://github.com/kasonyang/kalang-nb-support/blob/master/snapshot/codegen.png?raw=true)
 
 # How to build
 
