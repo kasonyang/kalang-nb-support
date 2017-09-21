@@ -1,5 +1,5 @@
 package kalang.ide.parser;
-import kalang.compiler.CompileError;
+import kalang.compiler.Diagnosis;
 import org.netbeans.modules.csl.api.Severity;
 import org.openide.filesystems.FileObject;
 /**
@@ -18,17 +18,17 @@ public class KalangError implements org.netbeans.modules.csl.api.Error.Badging{
     private Severity severity = Severity.ERROR;
     private Object[] parameters = new Object[0];
     private boolean showExplorerBadge = true;
-    private final CompileError compileError;
+    private final Diagnosis Diagnosis;
 
-    public KalangError(CompileError error, FileObject file, String key,String displayName, String description) {        
+    public KalangError(Diagnosis error, FileObject file, String key,String displayName, String description) {        
         this(error,file, key, displayName, description,0,1);
     }
     
-    public KalangError(CompileError error, FileObject file, String key,String displayName, String description,int startPosition,int endPosition){
+    public KalangError(Diagnosis error, FileObject file, String key,String displayName, String description,int startPosition,int endPosition){
         this(error,file, key, displayName, description, startPosition, endPosition, Severity.ERROR);
     }
     
-    public KalangError(CompileError error,FileObject file, String key,String displayName, String description,int startPosition,int endPosition,Severity severity){
+    public KalangError(Diagnosis error,FileObject file, String key,String displayName, String description,int startPosition,int endPosition,Severity severity){
         this.displayName = displayName;
         this.description = description;
         this.key = key;
@@ -36,7 +36,7 @@ public class KalangError implements org.netbeans.modules.csl.api.Error.Badging{
         this.startPosition = startPosition;
         this.endPosition = endPosition;
         this.severity = severity;
-        this.compileError = error;
+        this.Diagnosis = error;
     }
     
     
@@ -131,8 +131,8 @@ public class KalangError implements org.netbeans.modules.csl.api.Error.Badging{
         this.showExplorerBadge = showExplorerBadge;
     }
 
-    public CompileError getCompileError() {
-        return compileError;
+    public Diagnosis getDiagnosis() {
+        return Diagnosis;
     }
     
 }

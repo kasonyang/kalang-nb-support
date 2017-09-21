@@ -1,47 +1,43 @@
 buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath "cz.kubacki.gradle.plugins:gradle-nbm-plugin:1.10.0"
-        gradleApi()
-    }
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath "cz.kubacki.gradle.plugins:gradle-nbm-plugin:1.17.0"
+    gradleApi()
+  }
 }
 apply plugin: 'java'
 apply plugin: 'cz.kubacki.nbm'
 
 repositories {
-    mavenCentral()
-    maven {
-        url 'http://bits.netbeans.org/maven2/'
-    }
-    maven {
-        url  "http://dl.bintray.com/kasonyang/maven" 
-    }
+  mavenCentral()
+  maven {
+    url 'http://bits.netbeans.org/maven2/'
+  }
 }
 
-version = '1.0.12'
 nbm {
-    moduleName = 'kalang.ide.nb'
+  moduleName = 'kalang.ide.nb'
 }
 
 configurations {
-    provided
+  provided
 }
 sourceSets {
-    main { compileClasspath += configurations.provided }
+  main { compileClasspath += configurations.provided }
 }
 
 def nbApi(String api){
-   dependencies {
-        compile ("org.netbeans.api:${api}:RELEASE81")
-   }
+  dependencies {
+    compile ("org.netbeans.api:${api}:RELEASE81")
+  }
 }
 
 def nbModule(String module){
-    dependencies {
-        implementation ("org.netbeans.modules:${module}:RELEASE81")
-    }
+  dependencies {
+    implementation ("org.netbeans.modules:${module}:RELEASE81")
+  }
 }
 
 dependencies {
@@ -71,7 +67,7 @@ dependencies {
     nbModule 'org-netbeans-modules-java-preprocessorbridge'
 
     //compile 'org.slf4j:slf4j-api:1.7.2'
-    compile 'com.kasonyang.kalang:kalang-compiler:0.0.6'
+    compile 'site.kason.kalang:kalang-compiler:1.0.0'
     testCompile 'junit:junit:4.12'
 }
 

@@ -5,15 +5,14 @@ import java.util.List;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
 import kalang.compiler.CompilationUnit;
-import kalang.compiler.CompileError;
-import kalang.compiler.CompileErrorHandler;
+import kalang.compiler.Diagnosis;
+import kalang.compiler.DiagnosisHandler;
 import kalang.compiler.KalangCompiler;
 import kalang.compiler.OffsetRange;
 import kalang.ide.Logger;
 import static kalang.ide.Logger.log;
 import kalang.ide.compiler.NBKalangCompiler;
 import kalang.ide.utils.ClassPathHelper;
-import kalang.tool.FileSystemCompiler;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.netbeans.modules.csl.spi.GsfUtilities;
 import org.netbeans.modules.csl.spi.ParserResult;
@@ -91,20 +90,19 @@ public class KaParser extends Parser {
         result.setCompiler(compiler);
         //TODO fix file name
         compiler.addSource(clsName, src , fo.getName());
-        CompileErrorHandler errorHandler = new CompileErrorHandler() {
-            @Override
-            public void handleCompileError(CompileError ce) {
-                Logger.log("handling compile error");
+        DiagnosisHandler dh = new DiagnosisHandler() {
+          @Override
+          public void handleDiagnosis(Diagnosis ce) {
+            Logger.log("handling compile error");
                 if(collectError){
                     OffsetRange offset = ce.getOffset();
                     KalangError ke = new KalangError(ce, fo, clsName, clsName, ce.getDescription(),offset.startOffset,offset.stopOffset);
                     Logger.log(ce.toString());
                     result.errors.add(ke);
                 }
-            }
-            
+          }
         };
-        compiler.setCompileErrorHandler(errorHandler);
+        compiler.setDiagnosisHandler(dh);
         log("Compiling " + clsName);
         try {
             compiler.compile();

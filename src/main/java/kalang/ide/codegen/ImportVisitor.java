@@ -2,14 +2,14 @@ package kalang.ide.codegen;
 
 import java.util.ArrayList;
 import java.util.List;
-import kalang.antlr.KalangBaseVisitor;
+import kalang.antlr.KalangParserBaseVisitor;
 import kalang.antlr.KalangParser;
 
 /**
  *
  * @author Kason Yang
  */
-public class ImportVisitor extends KalangBaseVisitor<Object> {
+public class ImportVisitor extends KalangParserBaseVisitor<Object> {
 
     final List<String> imported = new ArrayList();
 

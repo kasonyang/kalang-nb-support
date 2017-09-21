@@ -23,7 +23,7 @@ public class ImplementGen extends MethodGenerator{
     @Override
     protected List<MethodDescriptor> getMethodNodes(ClassNode ast) {
         List<MethodDescriptor> unimplementsList = new LinkedList();
-        for(ObjectType itf:ast.interfaces){
+        for(ObjectType itf:ast.getInterfaces()){
             //TODO get all unimplemented methods
             unimplementsList.addAll(AstUtil.getUnimplementedMethod(ast, itf));
         }
