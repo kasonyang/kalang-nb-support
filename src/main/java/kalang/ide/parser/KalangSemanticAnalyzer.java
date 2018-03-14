@@ -104,7 +104,7 @@ public class KalangSemanticAnalyzer extends SemanticAnalyzer<KaParser.KaParserRe
                 int stopOffset = node.offset.stopOffset;
                 try{
                     tokenNav.move(startOffset);
-                }catch(ArrayIndexOutOfBoundsException ex){
+                }catch(Exception ex){
                     return OffsetRange.NONE;
                 }
                 int offset = startOffset;
