@@ -7,35 +7,40 @@ import kalang.ast.ErrorousExpr;
 import kalang.ast.ExprStmt;
 import kalang.compiler.AstBuilder;
 import kalang.compiler.CompilationUnit;
-import kalang.ide.Logger;
+import kalang.compiler.JavaAstLoader;
+import kalang.compiler.KalangCompiler;
+import kalang.compiler.SourceLoader;
 import kalang.ide.utils.ClassPathHelper;
-import kalang.tool.JointFileSystemCompiler;
+import kalang.tool.FileSystemSourceLoader;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 
 /**
  *
  * @author Kason Yang <i@kasonyang.com>
  */
 public class NBKalangCompiler {
-    
-    public static JointFileSystemCompiler compile(FileObject fo) throws IOException{
-        JointFileSystemCompiler cp = createKalangCompiler(fo);
+
+    public static KalangCompiler compile(FileObject fo) throws IOException {
+        KalangCompiler cp = createKalangCompiler(fo);
         String className = ClassPathHelper.getClassName(fo);
-        cp.addSource(className, fo.asText(),fo.getName());
+        cp.addSource(className, fo.asText(), fo.getName());
         cp.compile();
         return cp;
     }
 
-    public static JointFileSystemCompiler createKalangCompiler(FileObject fo) {
+    public static KalangCompiler createKalangCompiler(FileObject fo) {
         final ClassPath sourcePath = ClassPath.getClassPath(fo, ClassPath.SOURCE);
         ClassPath compilePath = ClassPath.getClassPath(fo, ClassPath.COMPILE);
-        final JointFileSystemCompiler compiler = new JointFileSystemCompiler() {
+        ClassLoader classLoader = NBKalangCompiler.class.getClassLoader();
+        if (compilePath != null) {
+            classLoader = ClassPathHelper.createClassLoader(compilePath);
+        }
+        final KalangCompiler compiler = new KalangCompiler(new JavaAstLoader(null, classLoader)) {
             @Override
             public AstBuilder createAstBuilder(CompilationUnit compilationUnit, KalangParser parser) {
                 return new AstBuilder(compilationUnit, parser) {
-                    
+
                     @Override
                     public Object visitErrorousMemberExpr(KalangParser.ErrorousMemberExprContext emec) {
                         super.visitErrorousMemberExpr(emec);
@@ -56,24 +61,9 @@ public class NBKalangCompiler {
                 };
             }
         };
-        if(sourcePath!=null){
-            for(FileObject sp:sourcePath.getRoots()){
-                File spf = FileUtil.toFile(sp);
-                if(spf!=null){
-                    compiler.addJavaSourcePath(spf);
-                    compiler.addSourcePath(spf);
-                }
-            }
-        }
-        if(compilePath!=null){
-            String cp = compilePath.toString(ClassPath.PathConversionMode.PRINT);
-            Logger.log("classpath:" + cp);
-            if(cp!=null && !cp.isEmpty()){
-                for(String p:cp.split(";")){
-                    File f = new File(p);
-                    if(f.exists()) compiler.addClassPath(f);
-                }
-            }
+        if (sourcePath != null) {
+            SourceLoader sourceLoader = new FileSystemSourceLoader(ClassPathHelper.getRootFiles(sourcePath), new String[]{"kl", "kalang"});
+            compiler.setSourceLoader(sourceLoader);
         }
         return compiler;
     }

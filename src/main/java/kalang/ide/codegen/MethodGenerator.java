@@ -9,6 +9,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import kalang.ast.ClassNode;
 import kalang.compiler.CompilationUnit;
+import kalang.compiler.KalangCompiler;
 import kalang.core.ArrayType;
 import kalang.core.ClassType;
 import kalang.core.GenericType;
@@ -22,7 +23,6 @@ import kalang.ide.compiler.NBKalangCompiler;
 import kalang.ide.utils.ClassPathHelper;
 import kalang.ide.utils.DocumentUtil;
 import kalang.ide.utils.FileObjectUtil;
-import kalang.tool.JointFileSystemCompiler;
 import kalang.util.NameUtil;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.netbeans.spi.editor.codegen.CodeGenerator;
@@ -57,7 +57,7 @@ public abstract class MethodGenerator implements CodeGenerator{
         }
         //TODO what about inner class?
         String className = ClassPathHelper.getClassName(fo);
-        JointFileSystemCompiler cp = NBKalangCompiler.createKalangCompiler(fo);
+        KalangCompiler cp = NBKalangCompiler.createKalangCompiler(fo);
         cp.addSource(className, textComponent.getText(), fo.getName());
         cp.compile();
         ClassNode ast = cp.getAst(className);

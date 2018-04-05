@@ -146,6 +146,7 @@ public class KaParser extends Parser {
             return caretOffset;
         }
 
+        @Override
         public Snapshot getSnapshot() {
             return snapshot;
         }
