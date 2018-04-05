@@ -9,6 +9,7 @@ buildscript {
 }
 apply plugin: 'java'
 apply plugin: 'cz.kubacki.nbm'
+apply from: 'gradle/version.gradle'
 
 repositories {
   mavenCentral()
