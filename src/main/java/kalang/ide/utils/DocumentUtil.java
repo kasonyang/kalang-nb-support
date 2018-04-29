@@ -11,12 +11,16 @@ import org.openide.util.Exceptions;
  * @author Kason Yang
  */
 public class DocumentUtil {
-    
-    public static String getIndent(JTextComponent textComponent){
+
+    public static String getIndent(JTextComponent textComponent) {
         Document doc = textComponent.getDocument();
         int offset = textComponent.getCaret().getDot();
+        return getIndent(doc, offset);
+    }
+
+    public static String getIndent(Document doc, int offset) {
         try {
-            int lineStartOffset = IndentUtils.lineStartOffset(doc, offset-1);
+            int lineStartOffset = IndentUtils.lineStartOffset(doc, offset - 1);
             int indentSize = IndentUtils.lineIndent(doc, lineStartOffset);
             String indent = IndentUtils.createIndentString(doc, indentSize);
             return indent;
