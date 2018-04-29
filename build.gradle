@@ -68,7 +68,7 @@ dependencies {
     nbModule 'org-netbeans-modules-java-preprocessorbridge'
 
     //compile 'org.slf4j:slf4j-api:1.7.2'
-    compile 'site.kason.kalang:kalang-compiler:1.2.1'
+    compile 'site.kason.kalang:kalang-compiler:1.2.3'
     testCompile 'junit:junit:4.12'
 }
 
