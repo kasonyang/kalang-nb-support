@@ -87,22 +87,23 @@ public class KaParser extends Parser {
         final FileObject fo = snapshot.getSource().getFileObject();
         final String clsName = ClassPathHelper.getClassName(snapshot.getSource().getFileObject());
         final KalangCompiler compiler = NBKalangCompiler.createKalangCompiler(fo);
-        result.setCompiler(compiler);
-        //TODO fix file name
-        compiler.addSource(clsName, src , fo.getName());
         DiagnosisHandler dh = new DiagnosisHandler() {
           @Override
           public void handleDiagnosis(Diagnosis ce) {
             Logger.log("handling compile error");
-                if(collectError){
-                    OffsetRange offset = ce.getOffset();
-                    KalangError ke = new KalangError(ce, fo, clsName, clsName, ce.getDescription(),offset.startOffset,offset.stopOffset);
-                    Logger.log(ce.toString());
-                    result.errors.add(ke);
-                }
+            compiler.stopCompile(compiler.getCompilingPhase());
+            if(collectError){
+                OffsetRange offset = ce.getOffset();
+                KalangError ke = new KalangError(ce, fo, clsName, clsName, ce.getDescription(),offset.startOffset,offset.stopOffset);
+                Logger.log(ce.toString());
+                result.errors.add(ke);
+            }
           }
         };
         compiler.setDiagnosisHandler(dh);
+        result.setCompiler(compiler);
+        //TODO fix file name
+        compiler.addSource(clsName, src , fo.getName());
         log("Compiling " + clsName);
         try {
             compiler.compile();
