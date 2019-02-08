@@ -1,9 +1,8 @@
 package kalang.ide.codegen;
 
-import kalang.ast.MethodNode;
-import kalang.core.MethodDescriptor;
-import kalang.util.AstUtil;
-import kalang.util.MethodUtil;
+import kalang.compiler.core.MethodDescriptor;
+
+
 
 /**
  *

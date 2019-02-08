@@ -1,20 +1,11 @@
 
 package kalang.ide.utils;
-import kalang.ast.AstNode;
-import java.io.*;
-import java.nio.*;
-import java.net.*;
-import java.util.*;
-import kalang.ast.AstVisitor;
-import kalang.ast.ClassNode;
-import kalang.compiler.AstBuilder;
-import kalang.compiler.CompilationUnit;
-import kalang.ide.Logger;
+import kalang.compiler.ast.AstNode;
+import kalang.compiler.ast.AstVisitor;
+import kalang.compiler.ast.ClassNode;
+import kalang.compiler.compile.AstBuilder;
+import kalang.compiler.compile.CompilationUnit;
 import kalang.ide.parser.KaParser;
-import kalang.util.ParseTreeNavigator;
-import kalang.util.TokenNavigator;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.tree.ParseTree;
 /**
  *
  * @author Kason Yang <i@kasonyang.com>

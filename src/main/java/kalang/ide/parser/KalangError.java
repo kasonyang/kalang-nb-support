@@ -1,5 +1,5 @@
 package kalang.ide.parser;
-import kalang.compiler.Diagnosis;
+import kalang.compiler.compile.Diagnosis;
 import org.netbeans.modules.csl.api.Severity;
 import org.openide.filesystems.FileObject;
 /**

@@ -6,14 +6,11 @@
 
 package kalang.ide.test;
 
-import kalang.antlr.KalangLexer;
+
+import kalang.compiler.antlr.KalangLexer;
 import kalang.ide.lexer.KaTokenId;
 import kalang.ide.lexer.TokenUtil;
-import org.junit.After;
-import org.junit.AfterClass;
 import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**

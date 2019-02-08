@@ -1,6 +1,5 @@
 package kalang.ide.elements;
 
-import kalang.ast.ClassNode;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.openide.filesystems.FileObject;
 

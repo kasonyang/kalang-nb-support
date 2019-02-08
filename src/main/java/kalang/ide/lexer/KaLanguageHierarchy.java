@@ -1,7 +1,6 @@
 package kalang.ide.lexer;
 
 import java.util.*;
-import kalang.antlr.KalangLexer;
 import org.netbeans.spi.lexer.LanguageHierarchy;
 import org.netbeans.spi.lexer.Lexer;
 import org.netbeans.spi.lexer.LexerRestartInfo;

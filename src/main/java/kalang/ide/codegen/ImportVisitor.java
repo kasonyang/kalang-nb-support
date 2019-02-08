@@ -2,8 +2,8 @@ package kalang.ide.codegen;
 
 import java.util.ArrayList;
 import java.util.List;
-import kalang.antlr.KalangParserBaseVisitor;
-import kalang.antlr.KalangParser;
+import kalang.compiler.antlr.KalangParser;
+import kalang.compiler.antlr.KalangParserBaseVisitor;
 
 /**
  *

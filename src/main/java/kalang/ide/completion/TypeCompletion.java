@@ -1,12 +1,10 @@
 package kalang.ide.completion;
-import kalang.ast.MethodNode;
-import kalang.ast.VarObject;
 import java.util.*;
-import kalang.core.ClassType;
-import kalang.core.FieldDescriptor;
-import kalang.core.MethodDescriptor;
-import kalang.core.Type;
-import kalang.util.AstUtil;
+import kalang.compiler.core.ClassType;
+import kalang.compiler.core.FieldDescriptor;
+import kalang.compiler.core.MethodDescriptor;
+import kalang.compiler.core.Type;
+import kalang.compiler.util.AstUtil;
 import org.netbeans.modules.csl.api.CompletionProposal;
 /**
  *

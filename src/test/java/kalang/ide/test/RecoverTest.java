@@ -5,8 +5,8 @@
  */
 package kalang.ide.test;
 
-import kalang.antlr.KalangLexer;
-import kalang.antlr.KalangParser;
+import kalang.compiler.antlr.KalangLexer;
+import kalang.compiler.antlr.KalangParser;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.DefaultErrorStrategy;
@@ -14,7 +14,6 @@ import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Token;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *

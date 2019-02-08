@@ -5,16 +5,8 @@
  */
 package kalang.ide.completion;
 
-import kalang.ast.MethodNode;
-import kalang.ast.VarObject;
 import java.util.*;
 import javax.swing.ImageIcon;
-import kalang.core.FieldDescriptor;
-import kalang.core.MethodDescriptor;
-import kalang.core.ParameterDescriptor;
-import kalang.core.Type;
-import kalang.ide.Logger;
-import kalang.ide.utils.ModifierUtil;
 import org.netbeans.modules.csl.api.CompletionProposal;
 import org.netbeans.modules.csl.api.ElementHandle;
 import org.netbeans.modules.csl.api.ElementKind;

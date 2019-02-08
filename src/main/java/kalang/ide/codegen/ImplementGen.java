@@ -3,12 +3,10 @@ package kalang.ide.codegen;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.text.JTextComponent;
-import kalang.ast.ClassNode;
-import kalang.ast.MethodNode;
-import kalang.core.ClassType;
-import kalang.core.MethodDescriptor;
-import kalang.core.ObjectType;
-import kalang.util.AstUtil;
+import kalang.compiler.ast.ClassNode;
+import kalang.compiler.core.MethodDescriptor;
+import kalang.compiler.core.ObjectType;
+import kalang.compiler.util.AstUtil;
 
 /**
  *

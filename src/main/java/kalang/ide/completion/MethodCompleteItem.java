@@ -2,8 +2,8 @@ package kalang.ide.completion;
 
 import java.util.Objects;
 import java.util.Set;
-import kalang.core.MethodDescriptor;
-import kalang.core.ParameterDescriptor;
+import kalang.compiler.core.MethodDescriptor;
+import kalang.compiler.core.ParameterDescriptor;
 import kalang.ide.Logger;
 import kalang.ide.utils.ModifierUtil;
 import org.netbeans.modules.csl.api.ElementKind;

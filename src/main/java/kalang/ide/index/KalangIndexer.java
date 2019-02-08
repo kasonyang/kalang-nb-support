@@ -1,21 +1,16 @@
 
 package kalang.ide.index;
 import java.io.*;
-import java.util.Collection;
-import kalang.compiler.CompilationUnit;
+import kalang.compiler.compile.CompilationUnit;
+import kalang.compiler.util.NameUtil;
 import kalang.ide.Logger;
 import kalang.ide.parser.KaParser;
-import kalang.util.AstUtil;
-import kalang.util.NameUtil;
 import org.netbeans.modules.parsing.spi.Parser;
 import org.netbeans.modules.parsing.spi.indexing.Context;
 import org.netbeans.modules.parsing.spi.indexing.EmbeddingIndexer;
 import org.netbeans.modules.parsing.spi.indexing.Indexable;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexDocument;
-import org.netbeans.modules.parsing.spi.indexing.support.IndexResult;
 import org.netbeans.modules.parsing.spi.indexing.support.IndexingSupport;
-import org.netbeans.modules.parsing.spi.indexing.support.QuerySupport;
-import org.openide.util.Exceptions;
 /**
  *
  * @author Kason Yang

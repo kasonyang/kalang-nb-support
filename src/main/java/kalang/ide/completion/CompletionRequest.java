@@ -1,5 +1,7 @@
 package kalang.ide.completion;
-import kalang.compiler.KalangCompiler;
+
+import kalang.compiler.compile.KalangCompiler;
+
 /**
  *
  * @author Kason Yang <i@kasonyang.com>

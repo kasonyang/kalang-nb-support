@@ -5,17 +5,17 @@
  */
 package kalang.ide.completion;
 
-import kalang.ast.AstNode;
 import java.util.*;
 import java.util.concurrent.Callable;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
-import kalang.ast.ClassReference;
-import kalang.ast.ExprNode;
-import kalang.ast.UnknownFieldExpr;
-import kalang.compiler.CompilationUnit;
-import kalang.core.Type;
-import kalang.core.Types;
+import kalang.compiler.ast.AstNode;
+import kalang.compiler.ast.ClassReference;
+import kalang.compiler.ast.ExprNode;
+import kalang.compiler.compile.CompilationUnit;
+import kalang.compiler.core.Type;
+import kalang.compiler.core.Types;
+import kalang.compiler.util.TokenNavigator;
 import org.netbeans.modules.csl.api.CodeCompletionContext;
 import org.netbeans.modules.csl.api.CodeCompletionHandler2;
 import org.netbeans.modules.csl.api.CodeCompletionResult;
@@ -27,7 +27,6 @@ import org.netbeans.modules.csl.spi.ParserResult;
 import static kalang.ide.Logger.log;
 import kalang.ide.parser.KaParser;
 import kalang.ide.utils.AstNodeHelper;
-import kalang.util.TokenNavigator;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
 import org.netbeans.modules.csl.spi.DefaultCompletionResult;

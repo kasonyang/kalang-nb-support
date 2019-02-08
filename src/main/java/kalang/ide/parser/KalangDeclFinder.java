@@ -1,21 +1,22 @@
 
 package kalang.ide.parser;
-import kalang.ast.AstNode;
-import kalang.ast.MethodNode;
+
 import javax.swing.text.Document;
-import kalang.antlr.KalangLexer;
-import kalang.ast.ClassNode;
-import kalang.ast.ClassReference;
-import kalang.ast.FieldExpr;
-import kalang.ast.FieldNode;
-import kalang.ast.InvocationExpr;
-import kalang.ast.NewObjectExpr;
-import kalang.ast.VarExpr;
-import kalang.ast.VarObject;
+import kalang.compiler.antlr.KalangLexer;
+import kalang.compiler.ast.AstNode;
+import kalang.compiler.ast.ClassNode;
+import kalang.compiler.ast.ClassReference;
+import kalang.compiler.ast.FieldExpr;
+import kalang.compiler.ast.FieldNode;
+import kalang.compiler.ast.InvocationExpr;
+import kalang.compiler.ast.MethodNode;
+import kalang.compiler.ast.NewObjectExpr;
+import kalang.compiler.ast.VarExpr;
+import kalang.compiler.ast.VarObject;
+
 import kalang.ide.Logger;
 import kalang.ide.lexer.KaTokenId;
 import kalang.ide.utils.AstNodeHelper;
-import kalang.ide.utils.ClassPathHelper;
 import kalang.ide.utils.FileObjectUtil;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.lexer.Token;

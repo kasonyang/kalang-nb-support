@@ -6,13 +6,10 @@
 package kalang.ide.utils;
 
 import java.io.*;
-import java.nio.*;
-import java.net.*;
-import java.util.*;
+import kalang.compiler.util.ClassNameUtil;
 import kalang.ide.Logger;
 import kalang.ide.compiler.MultiClassLoader;
-import kalang.util.ClassNameUtil;
-import org.apache.commons.io.FileUtils;
+
 import org.netbeans.api.java.classpath.ClassPath;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;

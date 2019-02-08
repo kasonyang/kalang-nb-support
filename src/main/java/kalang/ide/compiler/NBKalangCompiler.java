@@ -1,17 +1,18 @@
 package kalang.ide.compiler;
 
 import java.io.*;
-import kalang.antlr.KalangParser;
-import kalang.ast.AstNode;
-import kalang.ast.ErrorousExpr;
-import kalang.ast.ExprStmt;
-import kalang.compiler.AstBuilder;
-import kalang.compiler.CompilationUnit;
-import kalang.compiler.JavaAstLoader;
-import kalang.compiler.KalangCompiler;
-import kalang.compiler.SourceLoader;
+import kalang.compiler.antlr.KalangParser;
+import kalang.compiler.ast.AstNode;
+import kalang.compiler.ast.ErrorousExpr;
+import kalang.compiler.ast.ExprStmt;
+import kalang.compiler.compile.AstBuilder;
+import kalang.compiler.compile.CodeGenerator;
+import kalang.compiler.compile.CompilationUnit;
+import kalang.compiler.compile.JavaAstLoader;
+import kalang.compiler.compile.KalangCompiler;
+import kalang.compiler.compile.SourceLoader;
+import kalang.compiler.tool.FileSystemSourceLoader;
 import kalang.ide.utils.ClassPathHelper;
-import kalang.tool.FileSystemSourceLoader;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.openide.filesystems.FileObject;
 
@@ -60,6 +61,11 @@ public class NBKalangCompiler {
 
                 };
             }
+
+          @Override
+          public CodeGenerator createCodeGenerator(CompilationUnit compilationUnit) {
+            return null;
+          }
         };
         if (sourcePath != null) {
             SourceLoader sourceLoader = new FileSystemSourceLoader(ClassPathHelper.getRootFiles(sourcePath), new String[]{"kl", "kalang"});

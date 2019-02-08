@@ -1,7 +1,7 @@
 package kalang.ide.completion;
 
 import java.util.Set;
-import kalang.core.FieldDescriptor;
+import kalang.compiler.core.FieldDescriptor;
 import kalang.ide.utils.ModifierUtil;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.HtmlFormatter;

@@ -4,11 +4,12 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.BadLocationException;
-import kalang.compiler.CompilationUnit;
-import kalang.compiler.Diagnosis;
-import kalang.compiler.DiagnosisHandler;
-import kalang.compiler.KalangCompiler;
-import kalang.compiler.OffsetRange;
+import kalang.compiler.compile.CompilationUnit;
+import kalang.compiler.compile.Diagnosis;
+import kalang.compiler.compile.DiagnosisHandler;
+import kalang.compiler.compile.KalangCompiler;
+import kalang.compiler.compile.OffsetRange;
+
 import kalang.ide.Logger;
 import static kalang.ide.Logger.log;
 import kalang.ide.compiler.NBKalangCompiler;

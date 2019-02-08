@@ -1,7 +1,7 @@
 package kalang.ide.lexer;
 
 import java.util.HashMap;
-import kalang.antlr.KalangLexer;
+import kalang.compiler.antlr.KalangLexer;
 import org.antlr.v4.runtime.Vocabulary;
 
 /**

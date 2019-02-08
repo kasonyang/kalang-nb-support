@@ -1,14 +1,9 @@
 package kalang.ide.lexer;
 
-import java.io.IOException;
-import java.io.InputStream;
-import kalang.antlr.KalangLexer;
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CommonTokenStream;
+import kalang.compiler.antlr.KalangLexer;
 import org.antlr.v4.runtime.Token;
 import org.netbeans.spi.lexer.Lexer;
 import org.netbeans.spi.lexer.LexerRestartInfo;
-import org.openide.util.Exceptions;
 
 class KaLexer implements Lexer<KaTokenId> {
 
