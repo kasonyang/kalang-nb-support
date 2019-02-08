@@ -11,6 +11,7 @@ import kalang.compiler.compile.CompilationUnit;
 import kalang.compiler.compile.JavaAstLoader;
 import kalang.compiler.compile.KalangCompiler;
 import kalang.compiler.compile.SourceLoader;
+import kalang.compiler.compile.codegen.Ast2JavaStub;
 import kalang.compiler.tool.FileSystemSourceLoader;
 import kalang.ide.utils.ClassPathHelper;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -18,7 +19,7 @@ import org.openide.filesystems.FileObject;
 
 /**
  *
- * @author Kason Yang <i@kasonyang.com>
+ * @author Kason Yang
  */
 public class NBKalangCompiler {
 
@@ -64,7 +65,7 @@ public class NBKalangCompiler {
 
           @Override
           public CodeGenerator createCodeGenerator(CompilationUnit compilationUnit) {
-            return null;
+              return new Ast2JavaStub();
           }
         };
         if (sourcePath != null) {
