@@ -15,7 +15,7 @@ public class TokenUtil {
         Vocabulary v = KalangLexer.VOCABULARY;
         String keywords = "char,byte,int,long,double,float,void,null"
                 + ",public,protected,private"
-                + ",static,class,interface,extends,implements,var,as"
+                + ",static,class,interface,extends,implements,var,as,val"
                 + ",return,while,for,do,if,else"
                 + ",new,override,import,throw,throws,final,constructor"
                 + ",try,catch";
