@@ -14,7 +14,7 @@ public class TokenUtil {
         KaTokenId[] tokens = new KaTokenId[tokenSize];
         Vocabulary v = KalangLexer.VOCABULARY;
         String keywords = "char,byte,int,long,double,float,void,null"
-                + ",public,protected,private"
+                + ",public,protected,private,synchronized"
                 + ",static,class,interface,extends,implements,var,as,val"
                 + ",return,while,for,do,if,else"
                 + ",new,override,import,throw,throws,final,constructor"
@@ -31,7 +31,7 @@ public class TokenUtil {
         cmap.put("COMMENT","comment");
         cmap.put("LINE_COMMENT","comment");
         cmap.put("STRINGLITERAL","string");
-        
+        cmap.put("NUMBER", "number");
         for(int i=0;i<tokenSize;i++){
             String ln = v.getLiteralName(i);
             if(ln!=null){
