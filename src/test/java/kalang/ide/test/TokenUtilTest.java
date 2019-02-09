@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package kalang.ide.test;
 
 
@@ -15,7 +9,7 @@ import org.junit.Test;
 
 /**
  *
- * @author Kason Yang <i@kasonyang.com>
+ * @author Kason Yang
  */
 public class TokenUtilTest {
     
@@ -23,7 +17,7 @@ public class TokenUtilTest {
     public void testTokens(){
         KaTokenId[] tokens = TokenUtil.getAllTokens();
         for(int i=0;i<tokens.length;i++){
-            System.out.print(tokens[i]);
+            System.out.println(tokens[i]);
         }
         String c = tokens[KalangLexer.CLASS].primaryCategory();
         String op = tokens[KalangLexer.ADD].primaryCategory();

@@ -6,43 +6,43 @@ import org.antlr.v4.runtime.Vocabulary;
 
 /**
  *
- * @author Kason Yang <i@kasonyang.com>
+ * @author Kason Yang
  */
 public class TokenUtil {
     public static KaTokenId[] getAllTokens(){
         int tokenSize = 200;
         KaTokenId[] tokens = new KaTokenId[tokenSize];
         Vocabulary v = KalangLexer.VOCABULARY;
-        String keywords = "char,byte,int,long,double,float,void,null"
-                + ",public,protected,private,synchronized"
-                + ",static,class,interface,extends,implements,var,as,val"
-                + ",return,while,for,do,if,else"
-                + ",new,override,import,throw,throws,final,constructor"
-                + ",try,catch";
+        String keywords = "override,abstract,assert,boolean,break,byte,case,catch,char,class,const,continue,constructor,default,do,double,else,enum,extends,final,finally,float,for,if,goto,implements,import,instanceof,int,interface,long,native,new,package,private,protected,public,return,short,static,strictfp,super,switch,synchronized,this,throw,throws,transient,try,void,volatile,while,null,var,val,foreach,as,true,false";
         String operators = "+,-,*,/,%,=,==,!=,+=,-=,*=,/=,%=,++,--";
         HashMap<String,String> cmap = new HashMap();
         for(String k:keywords.split(",")){
-            cmap.put(k.toUpperCase(), "keyword");
+            cmap.put(k, "keyword");
         }
         for(String o:operators.split(",")){
             cmap.put(o, "operator");
         }
-        cmap.put("IDENTIFIER", "identifier");
-        cmap.put("COMMENT","comment");
-        cmap.put("LINE_COMMENT","comment");
-        cmap.put("STRINGLITERAL","string");
-        cmap.put("NUMBER", "number");
+        cmap.put("identifier", "identifier");
+        cmap.put("comment","comment");
+        cmap.put("line_comment","comment");
+        cmap.put("stringliteral","string");
+        cmap.put("multilinestringliteral", "string");
+        cmap.put("integerliteral", "number");
+        cmap.put("floatingpointliteral", "number");
+        cmap.put("booleanliteral", "keyword");
         for(int i=0;i<tokenSize;i++){
             String ln = v.getLiteralName(i);
             if(ln!=null){
-                ln = ln.toUpperCase();
+                ln = ln.toLowerCase();
                 if(ln.startsWith("'") && ln.endsWith("'")){
                     ln = ln.substring(1,ln.length()-1);
                 }
             }
             String sn = v.getSymbolicName(i);
             if(sn==null) {
-                sn = ln!=null?ln:("UNKNOWN" + i);
+                sn = ln!=null?ln:("unknown" + i);
+            } else {
+                sn = sn.toLowerCase();
             }
             String c = cmap.get(ln);
             if(c==null) c = cmap.get(sn);

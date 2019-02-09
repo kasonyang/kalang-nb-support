@@ -23,7 +23,7 @@ import org.netbeans.modules.parsing.spi.Scheduler;
 import org.netbeans.modules.parsing.spi.SchedulerEvent;
 /**
  *
- * @author Kason Yang <i@kasonyang.com>
+ * @author Kason Yang
  */
 public class KalangSemanticAnalyzer extends SemanticAnalyzer<KaParser.KaParserResult>{
 
@@ -62,7 +62,7 @@ public class KalangSemanticAnalyzer extends SemanticAnalyzer<KaParser.KaParserRe
             //TODO highlight field node
             @Override
             public Object visitFieldExpr(FieldExpr node) {
-                highlights.put(getNodeOffset(node), ColoringAttributes.FIELD_SET);
+                highlights.put(getIdOffset(node,-1), ColoringAttributes.FIELD_SET);
                 return super.visitFieldExpr(node);
             }
                                   
@@ -95,7 +95,7 @@ public class KalangSemanticAnalyzer extends SemanticAnalyzer<KaParser.KaParserRe
                 if(node.offset.startOffset<0 || node.offset.stopOffset<0){
                     return OffsetRange.NONE;
                 }
-                return new OffsetRange(node.offset.startOffset, node.offset.stopOffset);
+                return new OffsetRange(node.offset.startOffset, node.offset.stopOffset+1);
             }
             
             private OffsetRange getIdOffset(AstNode node,int idOffset){
@@ -123,7 +123,7 @@ public class KalangSemanticAnalyzer extends SemanticAnalyzer<KaParser.KaParserRe
                 if(idOffset<0) idOffset = ids.size() + idOffset;
                 if(idOffset>=0 && ids.size()>idOffset){
                     Token tk = ids.get(idOffset);
-                    return new OffsetRange(tk.getStartIndex(), tk.getStopIndex());
+                    return new OffsetRange(tk.getStartIndex(), tk.getStopIndex()+1);
                 }
                 return OffsetRange.NONE;
             }
