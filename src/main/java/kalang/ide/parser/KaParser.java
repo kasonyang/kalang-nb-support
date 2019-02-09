@@ -1,5 +1,6 @@
 package kalang.ide.parser;
 
+import java.io.ByteArrayOutputStream;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.event.ChangeListener;
@@ -9,6 +10,8 @@ import kalang.compiler.compile.Diagnosis;
 import kalang.compiler.compile.DiagnosisHandler;
 import kalang.compiler.compile.KalangCompiler;
 import kalang.compiler.compile.OffsetRange;
+import kalang.compiler.profile.Profiler;
+import kalang.compiler.profile.SpanFormatter;
 
 import kalang.ide.Logger;
 import static kalang.ide.Logger.log;
@@ -85,6 +88,7 @@ public class KaParser extends Parser {
     }
 
     private void parse(final Snapshot snapshot, final String src, final boolean collectError) {
+        Profiler.getInstance().startProfile();
         final FileObject fo = snapshot.getSource().getFileObject();
         final String clsName = ClassPathHelper.getClassName(snapshot.getSource().getFileObject());
         final KalangCompiler compiler = NBKalangCompiler.createKalangCompiler(fo);
@@ -105,12 +109,19 @@ public class KaParser extends Parser {
         result.setCompiler(compiler);
         //TODO fix file name
         compiler.addSource(clsName, src , fo.getName());
-        log("Compiling " + clsName);
+        //compiler.compile();
+        long startTime = System.currentTimeMillis();
         try {
             compiler.compile();
         } catch (Exception ex) {
             Logger.warn(ex);
         }
+        long endTime = System.currentTimeMillis();
+        log("Compiled(" + (endTime-startTime) + "ms) : " + clsName);
+        Profiler.getInstance().stopProfile();
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        new SpanFormatter().format(Profiler.getInstance().getRootSpan(), os);
+        Logger.log(os.toString());
     }
 
     public static class KaParserResult extends ParserResult {
