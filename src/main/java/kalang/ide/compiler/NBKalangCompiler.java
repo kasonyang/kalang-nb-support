@@ -7,13 +7,7 @@ import kalang.compiler.antlr.KalangParser;
 import kalang.compiler.ast.AstNode;
 import kalang.compiler.ast.ErrorousExpr;
 import kalang.compiler.ast.ExprStmt;
-import kalang.compiler.compile.AstBuilder;
-import kalang.compiler.compile.AstLoader;
-import kalang.compiler.compile.CodeGenerator;
-import kalang.compiler.compile.CompilationUnit;
-import kalang.compiler.compile.JavaAstLoader;
-import kalang.compiler.compile.KalangCompiler;
-import kalang.compiler.compile.SourceLoader;
+import kalang.compiler.compile.*;
 import kalang.compiler.compile.codegen.Ast2JavaStub;
 import kalang.compiler.tool.FileSystemSourceLoader;
 import kalang.ide.utils.ClassPathHelper;
@@ -50,7 +44,9 @@ public class NBKalangCompiler {
             if (compilePath != null) {
                 classLoader = ClassPathHelper.createClassLoader(compilePath);
             }
-            compiler = new KalangCompiler(new JavaAstLoader(null, classLoader)) {
+            Configuration conf = new Configuration();
+            conf.setAstLoader(new JavaAstLoader(null, classLoader));
+            compiler = new KalangCompiler(conf) {
                 @Override
                 public AstBuilder createAstBuilder(CompilationUnit compilationUnit, KalangParser parser) {
                     return new AstBuilder(compilationUnit, parser) {

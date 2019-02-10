@@ -60,12 +60,12 @@ public abstract class MethodGenerator implements CodeGenerator{
         KalangCompiler cp = NBKalangCompiler.createKalangCompiler(fo);
         cp.addSource(className, textComponent.getText(), fo.getName());
         cp.compile();
-        ClassNode ast = cp.getAst(className);
         CompilationUnit cunit = cp.getCompilationUnit(className);
         if(cunit==null){
             Logger.log("compilation is null");
             return;
         }
+        ClassNode ast = cunit.getAst();
         ParserRuleContext unitTree = cunit.getAstBuilder().getParseTree();
         if(ast==null){
             Logger.log("ast is null:" + className);
