@@ -113,6 +113,7 @@ public class KalangCompletionHandler implements CodeCompletionHandler2 {
         CompletionRequest request = new CompletionRequest();
         request.anchorOffset = anchorCaret;
         request.compiler = result.getCompiler();
+        request.compilationUnit = cunit;
         String source = result.getSnapshot().getText().toString();
         request.prefix = source.substring(anchorCaret, caret);
         log("prefix:" + request.prefix);

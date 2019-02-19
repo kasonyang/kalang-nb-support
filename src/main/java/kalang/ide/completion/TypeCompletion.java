@@ -17,7 +17,7 @@ public class TypeCompletion {
         if(!(ast instanceof ClassType)) return list;
         ClassType clazz = (ClassType) ast;
         //TODO require caller from params
-        FieldDescriptor[] fs = clazz.getFieldDescriptors(clazz.getClassNode());
+        FieldDescriptor[] fs = clazz.getFieldDescriptors(request.compilationUnit.getAst());
         String prefix = request.prefix==null ? "":request.prefix;
         if(fs!=null){
             for(FieldDescriptor f:fs){
@@ -28,7 +28,7 @@ public class TypeCompletion {
             }
         }
         //TODO require caller type
-        MethodDescriptor[] ms = clazz.getMethodDescriptors(clazz.getClassNode(), true,true);
+        MethodDescriptor[] ms = clazz.getMethodDescriptors(request.compilationUnit.getAst(), true,true);
         if(ms!=null){
             for(MethodDescriptor m:ms){
                 String name = m.getName();
