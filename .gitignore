@@ -1,0 +1,6 @@
+/nbproject/
+/.nb-gradle/
+/.gradle/
+/.nb-gradle-properties
+/kalang-nb-support.iml
+/.idea/
