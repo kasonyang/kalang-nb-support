@@ -9,6 +9,8 @@ import kalang.compiler.ast.ErrorousExpr;
 import kalang.compiler.ast.ExprStmt;
 import kalang.compiler.compile.*;
 import kalang.compiler.compile.codegen.Ast2JavaStub;
+import kalang.compiler.compile.jvm.JvmAstLoader;
+import kalang.compiler.compile.semantic.AstBuilder;
 import kalang.compiler.tool.FileSystemSourceLoader;
 import kalang.ide.utils.ClassPathHelper;
 import org.netbeans.api.java.classpath.ClassPath;
@@ -45,7 +47,7 @@ public class NBKalangCompiler {
                 classLoader = ClassPathHelper.createClassLoader(compilePath);
             }
             Configuration conf = new Configuration();
-            conf.setAstLoader(new JavaAstLoader(null, classLoader));
+            conf.setAstLoader(new JvmAstLoader(null, classLoader));
             compiler = new KalangCompiler(conf) {
                 @Override
                 public AstBuilder createAstBuilder(CompilationUnit compilationUnit, KalangParser parser) {
@@ -73,11 +75,11 @@ public class NBKalangCompiler {
 
               @Override
               public CodeGenerator createCodeGenerator(CompilationUnit compilationUnit) {
-                  return new Ast2JavaStub();
+                  return new Ast2JavaStub(compilationUnit);
               }
             };
             if (sourcePath != null) {
-                SourceLoader sourceLoader = new FileSystemSourceLoader(ClassPathHelper.getRootFiles(sourcePath), new String[]{"kl", "kalang"});
+                SourceLoader sourceLoader = new FileSystemSourceLoader(ClassPathHelper.getRootFiles(sourcePath), new String[]{"kl", "kalang"}, "utf8");
                 compiler.setSourceLoader(sourceLoader);
             }
             cachedCompilers.put(compilePath, compiler);

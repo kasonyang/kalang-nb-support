@@ -3,8 +3,8 @@ package kalang.ide.utils;
 import kalang.compiler.ast.AstNode;
 import kalang.compiler.ast.AstVisitor;
 import kalang.compiler.ast.ClassNode;
-import kalang.compiler.compile.AstBuilder;
 import kalang.compiler.compile.CompilationUnit;
+import kalang.compiler.compile.semantic.AstBuilder;
 import kalang.ide.parser.KaParser;
 /**
  *

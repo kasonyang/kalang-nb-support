@@ -2,19 +2,19 @@
 package kalang.ide.parser;
 import java.util.*;
 import kalang.compiler.antlr.KalangLexer;
+import kalang.compiler.ast.AssignableObject;
 import kalang.compiler.ast.AstNode;
 import kalang.compiler.ast.AstVisitor;
 import kalang.compiler.ast.ClassNode;
 import kalang.compiler.ast.FieldExpr;
 import kalang.compiler.ast.FieldNode;
 import kalang.compiler.ast.MethodNode;
-import kalang.compiler.ast.ParameterExpr;
 import kalang.compiler.ast.ParameterNode;
 import kalang.compiler.ast.VarExpr;
-import kalang.compiler.ast.VarObject;
 import kalang.compiler.compile.CompilationUnit;
 import kalang.compiler.util.TokenNavigator;
 import kalang.ide.Logger;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
 import org.netbeans.modules.csl.api.ColoringAttributes;
 import org.netbeans.modules.csl.api.OffsetRange;
@@ -43,15 +43,9 @@ public class KalangSemanticAnalyzer extends SemanticAnalyzer<KaParser.KaParserRe
         highlights.clear();
         if(cunit==null) return;
         ClassNode ast = cunit.getAst();
-        final TokenNavigator tokenNav = new TokenNavigator(cunit.getTokens().getTokens());
+        CommonTokenStream ts = (CommonTokenStream)cunit.getParser().getTokenStream();
+        final TokenNavigator tokenNav = new TokenNavigator(ts.getTokens());
         new AstVisitor<Object>(){
-            
-            //TODO highlight parameter node
-            @Override
-            public Object visitParameterExpr(ParameterExpr node) {
-                highlights.put(getNodeOffset(node), ColoringAttributes.PARAMETER_SET);
-                return super.visitParameterExpr(node); 
-            }
 
             @Override
             public Object visitParameterNode(ParameterNode parameterNode) {
@@ -78,7 +72,7 @@ public class KalangSemanticAnalyzer extends SemanticAnalyzer<KaParser.KaParserRe
             }
             
             //TODO change to local var
-            public Object visitVarObject(VarObject node) {
+            public Object visitVarObject(AssignableObject node) {
                 Set<ColoringAttributes> ca;
                 if(node instanceof FieldNode){
                     ca = ColoringAttributes.FIELD_SET;

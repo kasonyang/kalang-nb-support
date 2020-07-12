@@ -49,10 +49,10 @@ public class KalangDeclFinder implements DeclarationFinder{
         }else if(astNode instanceof FieldExpr){
             FieldExpr fieldExpr = (FieldExpr) astNode;
             FieldNode field = fieldExpr.getField().getFieldNode();
-            return getDeclaration(result,field.getClassNode().name,field);
+            return getDeclaration(result,field.getClassNode().getName(), field);
         }else if(astNode instanceof ClassReference){
             ClassNode clazz = ((ClassReference) astNode).getReferencedClassNode();
-            return getDeclaration(result, clazz.name,clazz);
+            return getDeclaration(result, clazz.getName(), clazz);
         }else if(astNode instanceof NewObjectExpr){
             MethodNode md = ((NewObjectExpr)astNode).getConstructor().getMethod().getMethodNode();
             return getDeclaration(result, md);
@@ -79,7 +79,7 @@ public class KalangDeclFinder implements DeclarationFinder{
     
     static DeclarationLocation getDeclaration(KaParser.KaParserResult result,MethodNode method){
         ClassNode classNode = method.getClassNode();
-        String type = classNode.name;
+        String type = classNode.getName();
         FileObject srcFo = result.getSnapshot().getSource().getFileObject();
         ClassPath path = ClassPath.getClassPath(srcFo, ClassPath.SOURCE);
         FileObject fo = FileObjectUtil.getFileObject(path, type);

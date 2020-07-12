@@ -149,7 +149,7 @@ public abstract class MethodGenerator implements CodeGenerator{
             ClassType pt = (ClassType) type;
             Type[] pts = pt.getTypeArguments();
             ClassNode rawType = pt.getClassNode();
-            String name = rawType.name;
+            String name = rawType.getName();
             String simpleRootType = NameUtil.getClassNameWithoutPackage(name);
             //TODO remove default class
             importList.add(name);

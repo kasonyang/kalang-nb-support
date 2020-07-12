@@ -65,7 +65,7 @@ public class KalangCompletionHandler implements CodeCompletionHandler2 {
 
     private List<CompletionProposal> getCompleteType(KaParser.KaParserResult result, int caret) {
         CompilationUnit cunit = result.getCompilationUnit();
-        CommonTokenStream ts = cunit.getTokenStream();
+        CommonTokenStream ts = (CommonTokenStream) cunit.getParser().getTokenStream();
         TokenNavigator tokenNav = new TokenNavigator(ts.getTokens().toArray(new Token[0]));
         tokenNav.move(caret - 1);
         int currentTokenId = tokenNav.getCurrentToken().getTokenIndex();
