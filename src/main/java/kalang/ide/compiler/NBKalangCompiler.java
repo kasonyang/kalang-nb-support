@@ -1,20 +1,17 @@
 package kalang.ide.compiler;
 
-import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
-import kalang.compiler.antlr.KalangParser;
-import kalang.compiler.ast.AstNode;
-import kalang.compiler.ast.ErrorousExpr;
-import kalang.compiler.ast.ExprStmt;
-import kalang.compiler.compile.*;
-import kalang.compiler.compile.codegen.Ast2JavaStub;
+import kalang.compiler.compile.Configuration;
+import kalang.compiler.compile.KalangCompiler;
+import kalang.compiler.compile.SourceLoader;
 import kalang.compiler.compile.jvm.JvmAstLoader;
-import kalang.compiler.compile.semantic.AstBuilder;
 import kalang.compiler.tool.FileSystemSourceLoader;
 import kalang.ide.utils.ClassPathHelper;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.openide.filesystems.FileObject;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -22,7 +19,7 @@ import org.openide.filesystems.FileObject;
  */
 public class NBKalangCompiler {
     
-    private static Map<ClassPath,KalangCompiler> cachedCompilers = new HashMap();
+    private static Map<ClassPath,ExtendKalangCompiler> cachedCompilers = new HashMap();
 
     public static KalangCompiler compile(FileObject fo) throws IOException {
         KalangCompiler cp = createKalangCompiler(fo);
@@ -32,15 +29,15 @@ public class NBKalangCompiler {
         return cp;
     }
 
-    public static KalangCompiler createKalangCompiler(FileObject fo) {
+    public static ExtendKalangCompiler createKalangCompiler(FileObject fo) {
         final ClassPath sourcePath = ClassPath.getClassPath(fo, ClassPath.SOURCE);
         ClassPath compilePath = ClassPath.getClassPath(fo, ClassPath.COMPILE);
         return createKalangCompiler(sourcePath, compilePath);
     }
     
-    public static KalangCompiler createKalangCompiler(ClassPath sourcePath,ClassPath compilePath) {
+    public static ExtendKalangCompiler createKalangCompiler(ClassPath sourcePath,ClassPath compilePath) {
         //TODO sourcePath may change?
-        KalangCompiler compiler = cachedCompilers.get(compilePath);
+        ExtendKalangCompiler compiler = cachedCompilers.get(compilePath);
         if (compiler==null) {
             ClassLoader classLoader = NBKalangCompiler.class.getClassLoader();
             if (compilePath != null) {
@@ -48,36 +45,7 @@ public class NBKalangCompiler {
             }
             Configuration conf = new Configuration();
             conf.setAstLoader(new JvmAstLoader(null, classLoader));
-            compiler = new KalangCompiler(conf) {
-                @Override
-                public AstBuilder createAstBuilder(CompilationUnit compilationUnit, KalangParser parser) {
-                    return new AstBuilder(compilationUnit, parser) {
-
-                        @Override
-                        public Object visitErrorousMemberExpr(KalangParser.ErrorousMemberExprContext emec) {
-                            super.visitErrorousMemberExpr(emec);
-                            return visit(emec.expression());
-                        }
-
-                        @Override
-                        public Object visitErrorousStat(KalangParser.ErrorousStatContext esc) {
-                            super.visitErrorousStat(esc);
-                            Object ast = visit(esc.expression());
-                            if (ast instanceof AstNode) {
-                                return new ExprStmt(new ErrorousExpr((AstNode) ast));
-                            } else {
-                                return null;
-                            }
-                        }
-
-                    };
-                }
-
-              @Override
-              public CodeGenerator createCodeGenerator(CompilationUnit compilationUnit) {
-                  return new Ast2JavaStub(compilationUnit);
-              }
-            };
+            compiler = new ExtendKalangCompiler(conf);
             if (sourcePath != null) {
                 SourceLoader sourceLoader = new FileSystemSourceLoader(ClassPathHelper.getRootFiles(sourcePath), new String[]{"kl", "kalang"}, "utf8");
                 compiler.setSourceLoader(sourceLoader);

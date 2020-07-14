@@ -45,13 +45,12 @@ public class MethodCompleteItem extends KalangCompletionItem {
         }
         hf.appendText(")");
         hf.parameters(false);
-        Logger.log("lhs text:" + hf.getText());
         return hf.getText();
     }
 
     @Override
     public String getInsertPrefix() {
-        Logger.log("calling getInsertPrefix");
+        //Logger.log("calling getInsertPrefix");
         return method.getName();
         //return method.getName();
     }

@@ -15,6 +15,9 @@ import kalang.compiler.profile.SpanFormatter;
 
 import kalang.ide.Logger;
 import static kalang.ide.Logger.log;
+
+import kalang.ide.compiler.CompleteReq;
+import kalang.ide.compiler.ExtendKalangCompiler;
 import kalang.ide.compiler.NBKalangCompiler;
 import kalang.ide.utils.ClassPathHelper;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -43,31 +46,10 @@ public class KaParser extends Parser {
         log("event:" + event);
         this.snapshot = snapshot;
         String src = snapshot.getText().toString();
-        int srcLen = src.length();
         int caretOffset = GsfUtilities.getLastKnownCaretOffset(snapshot, event);
-        log("last caretOffset:" + caretOffset);
-        int rowStart;
-        try {
-            rowStart = GsfUtilities.getRowStart(src, caretOffset);
-        } catch (BadLocationException ex) {
-            rowStart = -1;
-        }
-        int lastDotOffset = -1;
-        if (rowStart > 0) {
-            for (int i = caretOffset; i >= rowStart; i--) {
-                if (i >= srcLen) {
-                    continue;
-                }
-                if (src.charAt(i) == '.') {
-                    lastDotOffset = i;
-                    break;
-                }
-            }
-        }
-        log("last dot offset:" + lastDotOffset);
         String clsName = ClassPathHelper.getClassName(snapshot.getSource().getFileObject());
         result = new KaParserResult(clsName, snapshot, this);
-        parse(snapshot, src, true);
+        parse(snapshot, src, true, caretOffset);
     }
 
     @Override
@@ -87,11 +69,11 @@ public class KaParser extends Parser {
     public void removeChangeListener(ChangeListener changeListener) {
     }
 
-    private void parse(final Snapshot snapshot, final String src, final boolean collectError) {
+    private void parse(final Snapshot snapshot, final String src, final boolean collectError, int caret) {
         Profiler.getInstance().startProfile();
         final FileObject fo = snapshot.getSource().getFileObject();
         final String clsName = ClassPathHelper.getClassName(snapshot.getSource().getFileObject());
-        final KalangCompiler compiler = NBKalangCompiler.createKalangCompiler(fo);
+        final ExtendKalangCompiler compiler = NBKalangCompiler.createKalangCompiler(fo);
         DiagnosisHandler dh = new DiagnosisHandler() {
           @Override
           public void handleDiagnosis(Diagnosis ce) {
@@ -105,6 +87,7 @@ public class KaParser extends Parser {
             }
           }
         };
+        compiler.completeReq = new CompleteReq(clsName, caret);
         compiler.setDiagnosisHandler(dh);
         result.setCompiler(compiler);
         //TODO fix file name
@@ -135,7 +118,7 @@ public class KaParser extends Parser {
 //        private final CompilationUnit sourceParser;
 //        private final SemanticAnalyzer typeChecker;
         private final String className;
-        private KalangCompiler compiler;
+        private ExtendKalangCompiler compiler;
 
         private Snapshot snapshot;
 //        private final CommonTokenStream tokenStream;
@@ -176,11 +159,11 @@ public class KaParser extends Parser {
 //            return parseTreeNavigator;
 //        }
 
-        public void setCompiler(KalangCompiler compiler) {
+        public void setCompiler(ExtendKalangCompiler compiler) {
             this.compiler = compiler;
         }
 
-        public KalangCompiler getCompiler() {
+        public ExtendKalangCompiler getCompiler() {
             return compiler;
         }
         
