@@ -6,12 +6,10 @@
 package kalang.ide.completion;
 
 import kalang.compiler.antlr.KalangLexer;
-import kalang.compiler.ast.ClassReference;
-import kalang.compiler.ast.ExprNode;
 import kalang.compiler.compile.CompilationUnit;
-import kalang.compiler.core.Type;
-import kalang.compiler.core.Types;
 import kalang.compiler.util.TokenNavigator;
+import kalang.ide.compiler.complete.Completion;
+import kalang.ide.compiler.complete.MemberCompletion;
 import kalang.ide.parser.KaParser;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
@@ -57,10 +55,7 @@ public class KalangCompletionHandler implements CodeCompletionHandler2 {
         if (list == null) {
             return CodeCompletionResult.NONE;
         }
-        final List<CompletionProposal> items = list;
-        DefaultCompletionResult result = new DefaultCompletionResult(items, false);
-        
-        return result;
+        return new DefaultCompletionResult(list, false);
     }
 
     private List<CompletionProposal> getCompleteType(KaParser.KaParserResult result, int caret, String prefix) {
@@ -72,39 +67,30 @@ public class KalangCompletionHandler implements CodeCompletionHandler2 {
         TokenNavigator tokenNav = new TokenNavigator(ts.getTokens().toArray(new Token[0]));
         tokenNav.move(caret - 1);
         Token prevToken = tokenNav.getCurrentToken();
-        Map<Token, Object> cim = result.getCompiler().completeInfoMap;
-        Object astNode = cim.get(prevToken);
-        if (astNode == null) {
+        Map<Token, Completion> cim = result.getCompiler().completeTypeMap;
+        Completion completeType = cim.get(prevToken);
+        if (completeType == null) {
             if (!tokenNav.hasPrevious()) {
                 return null;
             }
             tokenNav.previous();
             prevToken = tokenNav.getCurrentToken();
-            astNode = cim.get(prevToken);
+            completeType = cim.get(prevToken);
         }
-        if (astNode == null) {
+        if (completeType == null) {
             return null;
         }
-        Type type;
-        boolean inStatic;
-        if (astNode instanceof ExprNode) {
-            type = ((ExprNode) astNode).getType();
-            inStatic = false;
-        } else if (astNode instanceof ClassReference) {
-            type = Types.getClassType(
-                    ((ClassReference) astNode).getReferencedClassNode()
-            );
-            inStatic = true;
-        } else {
-            return null;
+        if (completeType instanceof MemberCompletion) {
+            MemberCompletion mc = (MemberCompletion) completeType;
+            CompletionRequest request = new CompletionRequest();
+            request.anchorOffset = prevToken.getStartIndex() + 1;
+            request.compiler = result.getCompiler();
+            request.compilationUnit = cunit;
+            request.prefix = prefix;
+            log("prefix:" + request.prefix);
+            return TypeCompletion.complete(request, mc.getOwnerType(), mc.getStaticMember());
         }
-        CompletionRequest request = new CompletionRequest();
-        request.anchorOffset = prevToken.getStartIndex() + 1;
-        request.compiler = result.getCompiler();
-        request.compilationUnit = cunit;
-        request.prefix = prefix;
-        log("prefix:" + request.prefix);
-        return TypeCompletion.complete(request, type,inStatic);
+        return null;
     }
 
     @Override

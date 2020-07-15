@@ -9,11 +9,14 @@ import kalang.compiler.compile.KalangCompiler;
 import kalang.compiler.compile.codegen.Ast2JavaStub;
 import kalang.compiler.compile.semantic.AstBuilder;
 import kalang.compiler.compile.semantic.NodeException;
-import kalang.compiler.util.TokenNavigator;
-import org.antlr.v4.runtime.CommonTokenStream;
+import kalang.compiler.core.ClassType;
+import kalang.compiler.core.ObjectType;
+import kalang.compiler.core.Type;
+import kalang.compiler.core.Types;
+import kalang.ide.compiler.complete.Completion;
+import kalang.ide.compiler.complete.MemberCompletion;
 import org.antlr.v4.runtime.Token;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,13 +25,11 @@ import java.util.Map;
  */
 public class ExtendKalangCompiler extends KalangCompiler {
 
-    @Nullable
-    public CompleteReq completeReq;
-
-    public Map<Token, Object> completeInfoMap = new HashMap<Token, Object>();
-
-    @Nullable
-    public CompleteContext completeContext;
+    /**
+     * key: operator token
+     * value: complete type
+     */
+    public Map<Token, Completion> completeTypeMap = new HashMap<Token, Completion>();
 
     public ExtendKalangCompiler() {
     }
@@ -45,7 +46,7 @@ public class ExtendKalangCompiler extends KalangCompiler {
             public Object visitErrorousMemberExpr(KalangParser.ErrorousMemberExprContext emec) {
                 Token token = emec.stop;
                 Object result = super.visit(emec.expression());
-                completeInfoMap.put(token, result);
+                completeForTarget(token, result);
                 return result;
             }
 
@@ -53,13 +54,21 @@ public class ExtendKalangCompiler extends KalangCompiler {
             public ExprNode visitGetFieldExpr(KalangParser.GetFieldExprContext ctx) {
                 Token opToken = ctx.refKey;
                 try {
-                    ExprNode expr = super.visitGetFieldExpr(ctx);
-                    completeNormal(opToken, expr);
-                    return expr;
+                    return complete(opToken, super.visitGetFieldExpr(ctx));
                 } catch (NodeException ne) {
-                    Object expr = visit(ctx.expression());
-                    completeTarget(opToken, expr);
+                    completeForTarget(opToken, visit(ctx.expression()));
                     throw ne;
+                }
+            }
+
+            @Override
+            public AstNode visitInvokeExpr(KalangParser.InvokeExprContext ctx) {
+                Token opToken = ctx.refKey;
+                try {
+                    return complete(opToken, super.visitInvokeExpr(ctx));
+                } catch (NodeException ex) {
+                    completeForTarget(opToken, visit(ctx.target));
+                    throw ex;
                 }
             }
 
@@ -74,35 +83,33 @@ public class ExtendKalangCompiler extends KalangCompiler {
                 }
             }
 
-            private boolean isDotToken(Token token) {
-                return token != null && token.getText().equals(".");
+            private <T> T complete(Token opToken, T expr) {
+                if (expr instanceof ObjectInvokeExpr) {
+                    completeForTarget(opToken, ((ObjectInvokeExpr) expr).getInvokeTarget());
+                } else if (expr instanceof StaticInvokeExpr) {
+                    completeForTarget(opToken, ((StaticInvokeExpr) expr).getInvokeClass());
+                } else if (expr instanceof ObjectFieldExpr) {
+                    completeForTarget(opToken, ((ObjectFieldExpr) expr).getTarget());
+                } else if (expr instanceof StaticFieldExpr) {
+                    completeForTarget(opToken, ((StaticFieldExpr) expr).getClassReference());
+                }
+                return expr;
             }
 
-            @Nullable
-            private Token getToken(int tokenOffset) {
-                if (completeReq == null || completeReq.caret <= 0) {
-                    return null;
+            private void completeForTarget(Token opToken, Object node) {
+                if (node instanceof ExprNode) {
+                    Type targetType = ((ExprNode) node).getType();
+                    if (!(targetType instanceof ObjectType)) {
+                        return;
+                    }
+                    ObjectType targetObjType = (ObjectType) targetType;
+                    completeTypeMap.put(opToken, new MemberCompletion(targetObjType, false));
+                } else if (node instanceof ClassReference) {
+                    ClassReference cr = (ClassReference) node;
+                    ClassNode clsNode = cr.getReferencedClassNode();
+                    ClassType clsType = Types.getClassType(clsNode);
+                    completeTypeMap.put(opToken, new MemberCompletion(clsType, true));
                 }
-                CommonTokenStream ts = (CommonTokenStream) getParser().getTokenStream();
-                TokenNavigator tokenNav = new TokenNavigator(ts.getTokens().toArray(new Token[0]));
-                tokenNav.move(completeReq.caret);
-                int currentTokenId = tokenNav.getCurrentToken().getTokenIndex();
-                if (currentTokenId < 1) {
-                    return null;
-                }
-                //TODO skip comment channels
-                return ts.get(currentTokenId + tokenOffset);
-            }
-
-            private void completeNormal(Token opToken, Object node) {
-                if (node instanceof ObjectInvokeExpr) {
-                    ObjectInvokeExpr oie = (ObjectInvokeExpr) node;
-                    completeTarget(opToken, oie.getInvokeTarget());
-                }
-            }
-
-            private void completeTarget(Token opToken, Object target) {
-                completeInfoMap.put(opToken, target);
             }
 
         };
@@ -111,15 +118,6 @@ public class ExtendKalangCompiler extends KalangCompiler {
     @Override
     public CodeGenerator createCodeGenerator(CompilationUnit compilationUnit) {
         return new Ast2JavaStub(compilationUnit);
-    }
-
-    private Object doComplete(Object node, int anchorCaret) {
-        completeContext = new CompleteContext();
-        if (node instanceof AstNode) {
-            completeContext.completeNode = (AstNode) node;
-            completeContext.anchorCaret = anchorCaret;
-        }
-        return node;
     }
 
 }
