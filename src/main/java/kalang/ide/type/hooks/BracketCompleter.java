@@ -1,14 +1,16 @@
 package kalang.ide.type.hooks;
 
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Caret;
-import javax.swing.text.Document;
-
 import kalang.ide.KaLanguage;
 import kalang.ide.Logger;
 import org.netbeans.api.editor.mimelookup.MimePath;
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
+import org.netbeans.api.lexer.TokenHierarchy;
+import org.netbeans.api.lexer.TokenSequence;
 import org.netbeans.spi.editor.typinghooks.TypedTextInterceptor;
+
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Caret;
+import javax.swing.text.Document;
 
 /**
  *
@@ -25,17 +27,7 @@ public class BracketCompleter implements TypedTextInterceptor {
 
     @Override
     public void insert(MutableContext context) throws BadLocationException {
-        String text = context.getText();
-        char[] chars = text.toCharArray();
-        if (chars.length != 1) {
-            return;
-        }
-        char ch = chars[0];
-        String completeText = getCompleteText(ch);
-        if (!completeText.isEmpty()) {
-            String newText = text + completeText;
-            context.setText(newText, text.length());
-        }
+
     }
 
     @Override
@@ -43,20 +35,28 @@ public class BracketCompleter implements TypedTextInterceptor {
         Caret caret = context.getComponent().getCaret();
         Document doc = context.getDocument();
         int offset = context.getOffset();
-        char[] chars = context.getText().toCharArray();
-        if (chars.length != 1) {
+        String text = context.getText();
+        if (text.length() != 1) {
             return;
         }
-        char ch = chars[0];
-        if (!isCompletedChar(ch)) {
+        char ch = text.charAt(0);
+        String completeText = getCompleteText(ch);
+        if (completeText.isEmpty() && !isCompletedChar(ch)) {
             return;
         }
-        char currentChar = context.getDocument().getText(offset, 1).charAt(0);
-        if (currentChar != ch) {
+        if (!isTokenText(doc, offset, text)) {
             return;
         }
-        doc.remove(offset, 1);
-        caret.setDot(offset + 1);
+        if (!completeText.isEmpty()) {
+            doc.insertString(offset + 1, completeText, null);
+            caret.setDot(offset + 1);
+        } else {
+            char currentChar = context.getDocument().getText(offset, 1).charAt(0);
+            if (currentChar == ch) {
+                doc.remove(offset, 1);
+                caret.setDot(offset + 1);
+            }
+        }
     }
 
     @Override
@@ -79,6 +79,17 @@ public class BracketCompleter implements TypedTextInterceptor {
             }
         }
         return "";
+    }
+
+    private boolean isTokenText(Document doc, int caret, String text) {
+        TokenHierarchy<Document> th = TokenHierarchy.get(doc);
+        TokenSequence ts = th.tokenSequence();
+        ts.move(caret);
+        if (!ts.moveNext()) {
+            return false;
+        }
+        CharSequence tokenText = ts.token().text();
+        return text.length() == tokenText.length() && text.equals(tokenText.toString());
     }
 
     
