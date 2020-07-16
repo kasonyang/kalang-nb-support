@@ -1,4 +1,4 @@
-package kalang.ide;
+package kalang.ide.indent;
 
 import org.netbeans.api.editor.mimelookup.MimeRegistration;
 import org.netbeans.modules.editor.indent.spi.Context;

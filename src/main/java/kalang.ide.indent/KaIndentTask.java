@@ -1,4 +1,4 @@
-package kalang.ide;
+package kalang.ide.indent;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -19,8 +19,12 @@ public class KaIndentTask implements IndentTask {
     public void reindent() throws BadLocationException {
         Document doc = context.document();
         int offset = context.caretOffset();
-        int lineStartOffset = IndentUtils.lineStartOffset(doc, offset-1);
-        int indentSize = IndentUtils.lineIndent(doc, lineStartOffset);
+        int lineStartOffset = IndentUtils.lineStartOffset(doc, offset);
+        if (lineStartOffset != offset) {
+            return;
+        }
+        int prevLineStartOffset = IndentUtils.lineStartOffset(doc, offset-1);
+        int indentSize = IndentUtils.lineIndent(doc, prevLineStartOffset);
         String indent = IndentUtils.createIndentString(doc, indentSize);
         doc.insertString(offset,indent, null);
     }
