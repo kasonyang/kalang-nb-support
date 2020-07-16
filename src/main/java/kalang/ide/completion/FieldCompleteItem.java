@@ -2,6 +2,7 @@ package kalang.ide.completion;
 
 import java.util.Set;
 import kalang.compiler.core.FieldDescriptor;
+import kalang.compiler.util.NameUtil;
 import kalang.ide.utils.ModifierUtil;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.HtmlFormatter;
@@ -27,7 +28,7 @@ class FieldCompleteItem extends KalangCompletionItem {
 
     @Override
     public String getRhsHtml(HtmlFormatter hf) {
-        return field.getType() != null ? field.getType().getName() : "";
+        return NameUtil.getSimpleClassName(field.getType().getName());
     }
 
     @Override

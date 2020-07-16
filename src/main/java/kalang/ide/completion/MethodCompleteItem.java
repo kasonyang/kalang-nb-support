@@ -1,14 +1,15 @@
 package kalang.ide.completion;
 
-import java.util.Objects;
-import java.util.Set;
 import kalang.compiler.core.MethodDescriptor;
 import kalang.compiler.core.ParameterDescriptor;
+import kalang.compiler.util.NameUtil;
 import kalang.ide.Logger;
 import kalang.ide.utils.ModifierUtil;
 import org.netbeans.modules.csl.api.ElementKind;
 import org.netbeans.modules.csl.api.HtmlFormatter;
 import org.netbeans.modules.csl.api.Modifier;
+
+import java.util.Set;
 
 /**
  *
@@ -40,7 +41,10 @@ public class MethodCompleteItem extends KalangCompletionItem {
                     hf.appendText(",");
                 }
                 ParameterDescriptor p = params[i];
-                hf.appendText(p.getType() + " " + p.getName());
+                String pType = NameUtil.getSimpleClassName(p.getType().getName());
+                hf.appendText(pType);
+                hf.appendText(" ");
+                hf.appendText(p.getName());
             }
         }
         hf.appendText(")");
@@ -50,14 +54,12 @@ public class MethodCompleteItem extends KalangCompletionItem {
 
     @Override
     public String getInsertPrefix() {
-        //Logger.log("calling getInsertPrefix");
         return method.getName();
-        //return method.getName();
     }
 
     @Override
     public String getRhsHtml(HtmlFormatter hf) {
-        return Objects.toString(method.getReturnType(), "");
+        return NameUtil.getSimpleClassName(method.getReturnType().getName());
     }
 
     @Override
@@ -67,22 +69,10 @@ public class MethodCompleteItem extends KalangCompletionItem {
 
     @Override
     public String getCustomInsertTemplate() {
-        return null;
-        //TODO why it insert a indent automatically
-//        Logger.log("calling getCustomInsertTemplate");
-//        StringBuilder sb = new StringBuilder();
-//        sb.append(getInsertPrefix());
-//        sb.append("(");
-//        ParameterDescriptor[] pds = method.getParameterDescriptors();
-//        for (int i = 0; i < pds.length; i++) {
-//            if (i > 0) {
-//                sb.append(",");
-//            }
-//            sb.append(String.format("${%s}", pds[i].getName()));
-//        }
-//        sb.append(")${cursor}");
-//        Logger.log("insertTemplate:" + sb.toString());
-//        return sb.toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append(getInsertPrefix());
+        sb.append("(${cursor})");
+        return sb.toString();
     }
 
     @Override
