@@ -74,10 +74,10 @@ public class KaParser extends Parser {
         compiler.setCompileTargetPhase(CompilePhase.PHASE_SEMANTIC);
         result.setCompiler(compiler);
         //TODO fix file name
-        compiler.addSource(clsName, src, fo.getName());
         //compiler.compile();
         long startTime = System.currentTimeMillis();
         try {
+            compiler.addSource(clsName, src, fo.getName());
             compiler.compile();
         } catch (Exception ex) {
             Logger.warn(ex);
