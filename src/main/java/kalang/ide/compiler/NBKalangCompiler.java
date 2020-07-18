@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public class NBKalangCompiler {
     
-    private static Map<ClassPath,ExtendKalangCompiler> cachedCompilers = new HashMap();
+    private static Map<ClassPath,ExtendKalangCompiler> cachedCompilers = new HashMap<ClassPath, ExtendKalangCompiler>();
 
     public static KalangCompiler compile(FileObject fo) throws IOException {
         KalangCompiler cp = createKalangCompiler(fo);

@@ -1,14 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package kalang.ide.completion;
 
 import kalang.compiler.antlr.KalangLexer;
 import kalang.compiler.compile.CompilationUnit;
 import kalang.compiler.util.TokenNavigator;
 import kalang.ide.compiler.complete.Completion;
+import kalang.ide.compiler.complete.KalangCompleter;
 import kalang.ide.compiler.complete.MemberCompletion;
 import kalang.ide.parser.KaParser;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -29,7 +25,7 @@ import static kalang.ide.Logger.log;
 
 /**
  *
- * @author Kason Yang <i@kasonyang.com>
+ * @author Kason Yang
  */
 public class KalangCompletionHandler implements CodeCompletionHandler2 {
 
@@ -63,27 +59,15 @@ public class KalangCompletionHandler implements CodeCompletionHandler2 {
         if (caret <= 0) {
             return null;
         }
-        CommonTokenStream ts = (CommonTokenStream) cunit.getParser().getTokenStream();
-        TokenNavigator tokenNav = new TokenNavigator(ts.getTokens().toArray(new Token[0]));
-        tokenNav.move(caret - 1);
-        Token prevToken = tokenNav.getCurrentToken();
-        Map<Token, Completion> cim = result.getCompiler().completeTypeMap;
-        Completion completeType = cim.get(prevToken);
-        if (completeType == null) {
-            if (!tokenNav.hasPrevious()) {
-                return null;
-            }
-            tokenNav.previous();
-            prevToken = tokenNav.getCurrentToken();
-            completeType = cim.get(prevToken);
-        }
+        KalangCompleter completer = new KalangCompleter(result.getCompiler().parseTreeAstNodeMap, result.getCompilationUnit());
+        Completion completeType = completer.complete(caret);
         if (completeType == null) {
             return null;
         }
         if (completeType instanceof MemberCompletion) {
             MemberCompletion mc = (MemberCompletion) completeType;
             CompletionRequest request = new CompletionRequest();
-            request.anchorOffset = prevToken.getStartIndex() + 1;
+            request.anchorOffset = mc.getAnchorOffset();
             request.compiler = result.getCompiler();
             request.compilationUnit = cunit;
             request.prefix = prefix;

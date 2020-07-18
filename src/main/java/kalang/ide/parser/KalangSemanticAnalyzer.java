@@ -93,6 +93,9 @@ public class KalangSemanticAnalyzer extends SemanticAnalyzer<KaParser.KaParserRe
             }
             
             private OffsetRange getIdOffset(AstNode node,int idOffset){
+                if (node.offset == null) {
+                    return OffsetRange.NONE;
+                }
                 int startOffset = node.offset.startOffset;
                 int stopOffset = node.offset.stopOffset;
                 try{

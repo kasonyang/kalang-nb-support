@@ -14,7 +14,10 @@ public class MemberCompletion implements Completion {
     @Nullable
     private Boolean staticMember;
 
-    public MemberCompletion(ObjectType ownerType, @Nullable Boolean staticMember) {
+    private int anchorOffset;
+
+    public MemberCompletion(int anchorOffset, ObjectType ownerType, @Nullable Boolean staticMember) {
+        this.anchorOffset = anchorOffset;
         this.ownerType = ownerType;
         this.staticMember = staticMember;
     }
@@ -26,5 +29,10 @@ public class MemberCompletion implements Completion {
     @Nullable
     public Boolean getStaticMember() {
         return staticMember;
+    }
+
+    @Override
+    public int getAnchorOffset() {
+        return anchorOffset;
     }
 }

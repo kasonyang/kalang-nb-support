@@ -5,6 +5,7 @@ package kalang.ide.compiler.complete;
  */
 public interface Completion {
 
+    int getAnchorOffset();
 
 
 }

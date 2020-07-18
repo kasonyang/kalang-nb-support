@@ -41,10 +41,6 @@ public class KaParser extends Parser {
     }
 
     @Override
-    public void cancel() {
-    }
-
-    @Override
     public void addChangeListener(ChangeListener changeListener) {
     }
 
@@ -71,6 +67,7 @@ public class KaParser extends Parser {
         };
         compiler.setDiagnosisHandler(dh);
         compiler.setCompileTargetPhase(CompilePhase.PHASE_SEMANTIC);
+        compiler.parseTreeAstNodeMap.clear();
         result.setCompiler(compiler);
         //TODO fix file name
         //compiler.compile();
