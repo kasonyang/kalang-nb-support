@@ -63,8 +63,7 @@ public class KaParser extends Parser {
                 Logger.log("handling compile error");
                 compiler.stopCompile(compiler.getCompilingPhase());
                 if (collectError) {
-                    OffsetRange offset = ce.getOffset();
-                    KalangError ke = new KalangError(ce, fo, clsName, clsName, ce.getDescription(), offset.startOffset, offset.stopOffset);
+                    KalangError ke = new KalangError(ce, fo, clsName);
                     Logger.log(ce.toString());
                     result.errors.add(ke);
                 }

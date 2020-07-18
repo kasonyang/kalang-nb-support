@@ -17,49 +17,60 @@ import org.openide.util.Exceptions;
 public class ErrorHighlightingTask extends ParserResultTask<KaParserResult> {
 
     @Override
-    public void run (KaParserResult result, SchedulerEvent event) {
-            List<KalangError> errors = result.getDiagnostics();
-            List<ErrorDescription> errDescList = new ArrayList<ErrorDescription> ();
-            if(errors!=null){
-                Document doc = result.getSnapshot().getSource().getDocument(false);
-                for(KalangError e:errors){
-//                    String excepted = e.getExpectedTokens().toString(KalangParser.VOCABULARY);
-//                    Token errTk = e.getOffendingToken();
-//                    String msg = errTk.getText() + " is unexcepted ,excepted " + excepted;
-//                    int start = errTk.getStartIndex();
-//                    int stop = errTk.getStopIndex();
-                    String msg = e.getDescription();
-                    int start = e.getStartPosition();
-                    int stop = e.getEndPosition();
-                    try{
-                        ErrorDescription errorDesc = ErrorDescriptionFactory.createErrorDescription(
-                            Severity.ERROR,
+    public void run(KaParserResult result, SchedulerEvent event) {
+        List<KalangError> errors = result.getDiagnostics();
+        List<ErrorDescription> errDescList = new ArrayList<ErrorDescription>();
+        if (errors != null) {
+            Document doc = result.getSnapshot().getSource().getDocument(false);
+            for (KalangError e : errors) {
+                String msg = e.getDescription();
+                if (msg == null) {
+                    msg = "";
+                }
+                int start = e.getStartPosition();
+                int stop = e.getEndPosition();
+                try {
+                    ErrorDescription errorDesc = ErrorDescriptionFactory.createErrorDescription(
+                            transSeverity(e.getSeverity()),
                             msg,
                             doc,
                             doc.createPosition(start),
                             doc.createPosition(stop)
-                        );
-                        errDescList.add(errorDesc);
-                    } catch (BadLocationException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
+                    );
+                    errDescList.add(errorDesc);
+                } catch (BadLocationException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
-                HintsController.setErrors (doc, "kalang", errDescList);
             }
+            HintsController.setErrors(doc, "kalang", errDescList);
+        }
     }
 
     @Override
-    public int getPriority () {
+    public int getPriority() {
         return 50;
     }
 
     @Override
-    public Class getSchedulerClass () {
+    public Class<? extends Scheduler> getSchedulerClass() {
         return Scheduler.EDITOR_SENSITIVE_TASK_SCHEDULER;
     }
 
     @Override
-    public void cancel () {
+    public void cancel() {
+    }
+
+    private Severity transSeverity(org.netbeans.modules.csl.api.Severity cslSeverity) {
+        switch (cslSeverity) {
+            case INFO:
+                return Severity.HINT;
+            case WARNING:
+                return Severity.WARNING;
+            case ERROR:
+            case FATAL:
+            default:
+                return Severity.ERROR;
+        }
     }
 
 }
