@@ -15,7 +15,6 @@ public class TypeCompletion {
 
     public static List<CompletionProposal> complete(CompletionRequest request, ObjectType objectType,@Nullable Boolean staticMember) {
         List<CompletionProposal> list = new LinkedList<CompletionProposal>();
-        //TODO require caller from params
         FieldDescriptor[] fs = objectType.getFieldDescriptors(request.compilationUnit.getAst());
         String prefix = request.prefix == null ? "" : request.prefix;
         if (fs != null) {
@@ -29,7 +28,6 @@ public class TypeCompletion {
                 list.add(new FieldCompleteItem(request, f));
             }
         }
-        //TODO require caller type
         MethodDescriptor[] ms = objectType.getMethodDescriptors(request.compilationUnit.getAst(), true, true);
         if (ms != null) {
             for (MethodDescriptor m : ms) {

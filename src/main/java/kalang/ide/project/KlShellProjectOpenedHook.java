@@ -3,6 +3,7 @@ package kalang.ide.project;
 import kalang.compiler.shell.ShellOptionParser;
 import kalang.compiler.util.FilePathUtil;
 import kalang.ide.Logger;
+import org.netbeans.api.java.classpath.ClassPath;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
@@ -53,8 +54,8 @@ public class KlShellProjectOpenedHook extends ProjectOpenedHook {
                 }
             }
             KlShellClassProvider classPathProvider = project.getLookup().lookup(KlShellClassProvider.class);
-            classPathProvider.setClassPaths(classPaths);
-            classPathProvider.setSourcePaths(sourceUrls);
+            classPathProvider.setClassPaths(ClassPath.COMPILE, classPaths);
+            classPathProvider.setClassPaths(ClassPath.SOURCE, sourceUrls);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
