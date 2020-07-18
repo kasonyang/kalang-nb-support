@@ -25,7 +25,7 @@ import org.openide.util.NbBundle.Messages;
 @MIMEResolver.ExtensionRegistration(
         displayName = "#LBL_Ka_LOADER",
         mimeType = "text/x-kalang",
-        extension = {"kl", "kalang"}
+        extension = {"kl", "kalang", "kls"}
 )
 @DataObject.Registration(
         mimeType = "text/x-kalang",

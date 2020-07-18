@@ -9,6 +9,7 @@ import kalang.ide.utils.ClassPathHelper;
 import org.netbeans.api.java.classpath.ClassPath;
 import org.openide.filesystems.FileObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,7 +48,8 @@ public class NBKalangCompiler {
             conf.setAstLoader(new JvmAstLoader(null, classLoader));
             compiler = new ExtendKalangCompiler(conf);
             if (sourcePath != null) {
-                SourceLoader sourceLoader = new FileSystemSourceLoader(ClassPathHelper.getRootFiles(sourcePath), new String[]{"kl", "kalang"}, "utf8");
+                File[] srcRoots = ClassPathHelper.getRootFiles(sourcePath);
+                SourceLoader sourceLoader = new FileSystemSourceLoader(srcRoots, new String[]{"kl", "kalang"}, "utf8");
                 compiler.setSourceLoader(sourceLoader);
             }
             cachedCompilers.put(compilePath, compiler);
